@@ -1,0 +1,14 @@
+﻿<Window x:Class="QemuUtil.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QemuUtil"
+        mc:Ignorable="d"
+        Title="Virtual bootable ISO/IMG tester" Height="450" Width="800">
+    <Grid>
+        <ListBox x:Name="IMGs" Margin="4,4,4,55" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot"/>
+        <Button Content="Browse/Add image" HorizontalAlignment="Left" Margin="4,359,0,0" VerticalAlignment="Top" Click="FindImages" Width="118" Height="55"/>
+        <Button Content="Remove image" HorizontalAlignment="Left" Margin="125,359,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="100" Height="55"/>
+    </Grid>
+</Window>
