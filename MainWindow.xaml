@@ -5,10 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QemuUtil"
         mc:Ignorable="d"
-        Title="Virtual bootable ISO/IMG tester" Height="450" Width="800">
-    <Grid>
-        <ListBox x:Name="IMGs" Margin="4,4,4,55" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot"/>
-        <Button Content="Browse/Add image" HorizontalAlignment="Left" Margin="4,359,0,0" VerticalAlignment="Top" Click="FindImages" Width="118" Height="55"/>
-        <Button Content="Remove image" HorizontalAlignment="Left" Margin="125,359,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="100" Height="55"/>
+        Title="ISO/IMG boot" Height="435" Width="250" Opacity="0.7">
+    <Grid Margin="0,0,10,3" Background="#FFFCF2FF" OpacityMask="Black">
+        <Grid Margin="6,4,-4,10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="0*"/>
+            </Grid.RowDefinitions>
+            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF1419E3" Foreground="#FFF6F007" Margin="0,0,0,-8" Grid.RowSpan="2">
+                <Button Content="Scan" Padding="1,-4,1,-1" Margin="166,354,0,0" Height="16" Width="33" Click="ScanImages"/>
+            </ListBox>
+            <Button Content="Add image" HorizontalAlignment="Left" Margin="4,358,0,0" VerticalAlignment="Top" Click="FindImages" Width="70" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
+                <Button.OpacityMask>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.OpacityMask>
+            </Button>
+            <Button Content="Remove image" HorizontalAlignment="Left" Margin="74,358,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="99" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
+                <Button.OpacityMask>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.OpacityMask>
+            </Button>
+        </Grid>
     </Grid>
 </Window>
