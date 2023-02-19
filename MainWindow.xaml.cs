@@ -113,6 +113,7 @@ namespace QemuUtil
 
         private void ScanImages(object sender, RoutedEventArgs e)
         {
+            IMGs.Items.Clear();
             foreach (var item in Directory.EnumerateFiles("c:\\PE__DATA", "*"))
             {
                 if(item.EndsWith(".ISO") || item.EndsWith(".iso"))
@@ -124,7 +125,8 @@ namespace QemuUtil
                     IMGs.Items.Add(item);
                 }
             }
-            //IMGs.Items.Refresh();
+            Scanner.IsEnabled = false;
+            Scanner.Visibility = Visibility.Hidden;
         }
     }
 }
