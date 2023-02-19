@@ -30,11 +30,6 @@ namespace QemuUtil
         public bool HiddenTerminal { get; set; } = false;
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
-        //public const int GWL_EXSTYLE = -20;
-        //public const int WS_EX_LAYERED = 0x80000;
-        //public const int LWA_ALPHA = 0x2;
-        //public const int LWA_COLORKEY = 0x1;
-
 
         public MainWindow()
         {
@@ -54,9 +49,10 @@ namespace QemuUtil
             ps.StartInfo.CreateNoWindow = HiddenTerminal;
             ps.StartInfo.FileName = "cmd.exe";
             ps.StartInfo.UseShellExecute = false;
+            ps.StartInfo.WorkingDirectory = "c:\\pe__data";
             ps.Start();
-            ps.StandardInput.WriteLine("cls");
-
+            ps.StandardInput.WriteLine("echo off & cls");
+            ps.StandardInput.WriteLine("echo CMD ProcessId= " + ps.Id);
             Global.ps = ps;
             Global.id = ps.Id;
             return ps;
@@ -68,22 +64,14 @@ namespace QemuUtil
             int hWnd = ps.MainWindowHandle.ToInt32();
             Global.Handle = hWnd;
             if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe")) 
-            {
-                ps.StandardInput.WriteLine("powershell -command \"winget install qemu\"");
-                ShowWindow(hWnd, SW_HIDE);
-            }
+            { ps.StandardInput.WriteLine("powershell -command \"winget install qemu\""); }
 
-            ps.StandardInput.WriteLine("pushd c:\\pe__data");
             string fileName = IMGs.SelectedValue.ToString();
-
             if (fileName.Contains(".IMG") || fileName.Contains(".img"))
-            {
-                ps.StandardInput.WriteLine("%q%  -m 10000 -drive file=" + (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -m 10G -name " + fileName + " -no-reboot");
-            }
+            { ps.StandardInput.WriteLine("%q%  -m 10000 -drive file=" + (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -m 10G -no-reboot"); }
             if (fileName.Contains(".ISO") || fileName.Contains(".iso"))
-            {
-                ps.StandardInput.WriteLine("%q% -cdrom " + (char)34 + fileName + (char)34 + " -m 10G");
-            }
+            { ps.StandardInput.WriteLine("%q% -cdrom " + (char)34 + fileName + (char)34 + " -m 10G"); }
+            //ShowWindow(hWnd, SW_HIDE);
         }
 
         private void FindImages(object sender, RoutedEventArgs e)
@@ -96,17 +84,22 @@ namespace QemuUtil
             if (!IMGs.Items.Contains(fileName))
             {
                 IMGs.Items.Add(fileName);
+                Global.ps.StandardInput.WriteLine("echo Added new file " + fileName);
             }
         }
 
         private void RemoveImage(object sender, RoutedEventArgs e)
         {
             string removelistitem = IMGs.SelectedValue.ToString();
+            MessageBox.Show(removelistitem);
             for (int n = IMGs.Items.Count - 1; n >= 0; --n)
             {
                 if (IMGs.Items[n].ToString().Contains(removelistitem))
                 {
                     IMGs.Items.RemoveAt(n);
+
+                    Process ps = Global.ps;
+                    ps.StandardInput.WriteLine("echo Removing " + removelistitem);
                 }
             }
         }
@@ -116,13 +109,11 @@ namespace QemuUtil
             IMGs.Items.Clear();
             foreach (var item in Directory.EnumerateFiles("c:\\PE__DATA", "*"))
             {
-                if(item.EndsWith(".ISO") || item.EndsWith(".iso"))
+                if(item.EndsWith(".ISO") || item.EndsWith(".iso") || item.EndsWith(".IMG") || item.EndsWith(".img"))
                 {
                     IMGs.Items.Add(item);
-                }
-                if (item.EndsWith(".IMG") || item.EndsWith(".img"))
-                {
-                    IMGs.Items.Add(item);
+                    Process ps = Global.ps;
+                    ps.StandardInput.WriteLine("echo Adding " + item);
                 }
             }
             Scanner.IsEnabled = false;

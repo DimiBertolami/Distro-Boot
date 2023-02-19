@@ -3,18 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QemuUtil", "QemuUtil.csproj", "{5CADD9A8-9E59-4A3A-804A-67963B177D87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QemuUtil", "QemuUtil.csproj", "{5CADD9A8-9E59-4A3A-804A-67963B177D87}"
+EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Installer_msi", "..\Installer_msi\Installer_msi.aiproj", "{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.All|Any CPU.Build.0 = Release|Any CPU
 		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CADD9A8-9E59-4A3A-804A-67963B177D87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.All|Any CPU.ActiveCfg = DefaultBuild
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.All|Any CPU.Build.0 = DefaultBuild
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.Debug|Any CPU.ActiveCfg = DefaultBuild
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.Debug|Any CPU.Build.0 = DefaultBuild
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.Release|Any CPU.ActiveCfg = DefaultBuild
+		{C88FDA8F-32A8-4D6B-9D30-3A8CF20EDBEB}.Release|Any CPU.Build.0 = DefaultBuild
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
