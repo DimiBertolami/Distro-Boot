@@ -1,10 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,16 +36,14 @@ namespace QemuUtil
         public bool HiddenTerminal { get; set; } = false;
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
+        static readonly HttpClient client = new HttpClient();
 
         public MainWindow()
         {
             InitializeComponent();
-            if (Global.id == 0)
-            {
-                Process ps = CreateProcess();
-                Global.ps = ps;
-                Global.id = ps.Id;
-            }
+            Process ps = CreateProcess();
+            Global.ps = ps;
+            Global.id = ps.Id;
         }
 
         public Process CreateProcess()
@@ -75,9 +77,10 @@ namespace QemuUtil
             if (fileName.Contains(".ISO") || fileName.Contains(".iso"))
             { ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -cdrom " + (char)34 + fileName + (char)34 + " -m 10G"); }
             ShowWindow(hWnd, SW_HIDE);
+            ShowOutput.IsChecked = false;
         }
 
-        private void FindImages(object sender, RoutedEventArgs e)
+        private void FindImage(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new();
             dlg.InitialDirectory = "c:\\pe__data\\";
@@ -123,12 +126,139 @@ namespace QemuUtil
             }
             Scanner.IsEnabled = false;
             Scanner.Visibility = Visibility.Hidden;
-            ShowOutput.Visibility = Visibility.Visible;
+            //ShowOutput.Visibility = Visibility.Visible;
         }
 
         private void ShowTerminal(object sender, RoutedEventArgs e)
         {
             ShowWindow(Global.Handle, SW_SHOW);
+        }
+
+        static string DownLoadFileInBackground2(string ImageFile)
+        {
+            // Create an HttpClientHandler object and set to use default credentials
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.UseDefaultCredentials = true;
+
+            // Create an HttpClient object
+            HttpClient client = new HttpClient(handler);
+            Task<HttpResponseMessage> response = client.GetAsync(ImageFile);
+            try
+            {
+                if (response.IsCompletedSuccessfully)
+                {
+                    System.Runtime.CompilerServices.TaskAwaiter<HttpResponseMessage> responseBody = response.GetAwaiter();
+                    //MessageBox.Show("response " + responseBody);
+                    //return response.Result;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                MessageBox.Show("\nException Caught!");
+                MessageBox.Show("Message :{0} ", e.Message);
+                //return e.Message;
+            }
+            Task<HttpResponseMessage> response2 = client.GetAsync(ImageFile);
+            do
+            {
+                //nothing
+            } while (response2.IsCompleted == false);
+            if (response2.IsCompleted)
+            {
+                // Need to call dispose on the HttpClient and HttpClientHandler objects
+                // when done using them, so the app doesn't leak resources
+                //return response2.Result;
+                //handler.Dispose();
+                //client.Dispose();
+            }
+            return response.Result.ToString();
+
+        }
+
+        private static void DownloadFileCallback2(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                Console.WriteLine("File download cancelled.");
+            }
+
+            if (e.Error != null)
+            {
+                Console.WriteLine(e.Error.ToString());
+            }
+        }
+
+        //private static Task DownloadImage(object sender, RoutedEventArgs e)
+        //{
+        //    MessageBox.Show("First DownloadImgFunction");
+        //    return DownloadImage(sender, e);
+        //}
+
+        private async void DownloadImage(object sender, RoutedEventArgs e)
+        {
+            //Global.webClient = new WebClient();
+            //MessageBox.Show(ISOUrls.SelectedIndex.ToString());
+            if (ISOUrls.SelectedIndex.ToString()== "-1")
+            {
+                MessageBox.Show("please select an item first..");
+            } 
+            else 
+            {
+                int positionCombo = ISOUrls.SelectedIndex + 1;
+                //MessageBox.Show((positionCombo).ToString());
+                Process ps = Global.ps;
+                string response = null;
+                switch (positionCombo)
+                {
+                    case 1:
+                        response = DownLoadFileInBackground2("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso");
+                        break;
+                    case 2:
+                        response = DownLoadFileInBackground2("https://mirror.alpix.eu/endeavouros/iso/EndeavourOS_Cassini_neo_22_12.iso");
+                        break;
+                    case 3:
+                        response = DownLoadFileInBackground2("https://mirror.crexio.com/linuxmint/isos/stable/21.1/linuxmint-21.1-cinnamon-64bit.iso");
+                        break;
+                    case 4:
+                        response = DownLoadFileInBackground2("https://download.manjaro.org/kde/22.0.3/manjaro-kde-22.0.3-230213-linux61.iso");
+                        break;
+                    case 5:
+                        response = DownLoadFileInBackground2("https://download.manjaro.org/gnome/22.0.3/manjaro-gnome-22.0.3-230213-linux61.iso");
+                        break;
+                    case 6:
+                        response = DownLoadFileInBackground2("https://iso.pop-os.org/22.04/amd64/intel/22/pop-os_22.04_amd64_intel_22.iso");
+                        break;
+                    case 7:
+                        response = DownLoadFileInBackground2("https://iso.pop-os.org/22.04/amd64/nvidia/22/pop-os_22.04_amd64_nvidia_22.iso");
+                        break;
+                    case 8:
+                        response = DownLoadFileInBackground2("https://download.fedoraproject.org/pub/fedora/linux/releases/37/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-37-1.7.iso");
+                        break;
+                    case 9:
+                        response = DownLoadFileInBackground2("https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso");
+                        break;
+                    case 10:
+                        response = DownLoadFileInBackground2("https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso");
+                        break;
+                    case 11:
+                        response = DownLoadFileInBackground2("https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-11.6.0-amd64-DVD-1.iso");
+                        break;
+                    case 12:
+                        response = DownLoadFileInBackground2("https://osdn.net/dl/linuxlite/linux-lite-6.2-64bit.iso");
+                        break;
+                    case 13:
+                        response = DownLoadFileInBackground2("https://sourceforge.net/projects/garuda-linux/files/garuda/dr460nized/221019/garuda-dr460nized-linux-zen-221019.iso");
+                        break;
+                    case 14:
+                        response = DownLoadFileInBackground2("https://ams3.dl.elementary.io/download/MTY3Njc4NTg3Nw==/elementaryos-7.0-stable.20230129rc.iso");
+                        break;
+                    default:
+                        break;
+                }
+                //response. .EnsureSuccessStatusCode();
+                //Task<string> responseBody = response.Contains.
+                ps.StandardInput.WriteLine(":: response " + response);
+            }
         }
     }
 }
