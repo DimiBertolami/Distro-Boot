@@ -71,7 +71,7 @@ namespace QemuUtil
             { ps.StandardInput.WriteLine("%q%  -m 10000 -drive file=" + (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -m 10G -no-reboot"); }
             if (fileName.Contains(".ISO") || fileName.Contains(".iso"))
             { ps.StandardInput.WriteLine("%q% -cdrom " + (char)34 + fileName + (char)34 + " -m 10G"); }
-            //ShowWindow(hWnd, SW_HIDE);
+            ShowWindow(hWnd, SW_HIDE);
         }
 
         private void FindImages(object sender, RoutedEventArgs e)
@@ -84,14 +84,13 @@ namespace QemuUtil
             if (!IMGs.Items.Contains(fileName))
             {
                 IMGs.Items.Add(fileName);
-                Global.ps.StandardInput.WriteLine("echo Added new file " + fileName);
+                Global.ps.StandardInput.WriteLine("Added " + fileName + "                >nul 2&>1");
             }
         }
 
         private void RemoveImage(object sender, RoutedEventArgs e)
         {
             string removelistitem = IMGs.SelectedValue.ToString();
-            MessageBox.Show(removelistitem);
             for (int n = IMGs.Items.Count - 1; n >= 0; --n)
             {
                 if (IMGs.Items[n].ToString().Contains(removelistitem))
@@ -99,7 +98,7 @@ namespace QemuUtil
                     IMGs.Items.RemoveAt(n);
 
                     Process ps = Global.ps;
-                    ps.StandardInput.WriteLine("echo Removing " + removelistitem);
+                    ps.StandardInput.WriteLine("Removing " + removelistitem + "                >nul  2&>1");
                 }
             }
         }
@@ -113,7 +112,7 @@ namespace QemuUtil
                 {
                     IMGs.Items.Add(item);
                     Process ps = Global.ps;
-                    ps.StandardInput.WriteLine("echo Adding " + item);
+                    ps.StandardInput.WriteLine("Adding " + item + "                >nul  2&>1");
                 }
             }
             Scanner.IsEnabled = false;
