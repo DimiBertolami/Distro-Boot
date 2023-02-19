@@ -12,16 +12,15 @@
                 <RowDefinition/>
                 <RowDefinition Height="0*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF1419E3" Foreground="#FFF6F007" Margin="0,0,0,-8" Grid.RowSpan="2" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                <Button x:Name="Scanner" Content="Scan" Padding="1,-4,1,-1" Margin="166,354,0,0" Height="24" Width="35" Click="ScanImages" RenderTransformOrigin="0.5,0.5"/>
-            </ListBox>
+            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF1419E3" Foreground="#FFF6F007" Margin="0,0,0,-8" Grid.RowSpan="2" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+            <Button x:Name="Scanner" Content="Scan" Padding="1,-4,1,-1" Margin="166,354,0,0" Height="24" Width="35" Click="ScanImages" RenderTransformOrigin="0.5,0.5"/>
             <Button Content="Add image" HorizontalAlignment="Left" Margin="4,358,0,0" VerticalAlignment="Top" Click="FindImages" Width="70" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
-                <Button.OpacityMask>
+                <!--<Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Black"/>
                         <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
-                </Button.OpacityMask>
+                </Button.OpacityMask>-->
             </Button>
             <Button Content="Remove image" HorizontalAlignment="Left" Margin="74,358,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="99" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
                 <Button.OpacityMask>
@@ -31,6 +30,7 @@
                     </LinearGradientBrush>
                 </Button.OpacityMask>
             </Button>
+            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal" Height="15" Width="16" RenderTransformOrigin="0.219,11.501" Margin="88,0,0,-300" Checked="ShowTerminal"/>
         </Grid>
     </Grid>
 </Window>
