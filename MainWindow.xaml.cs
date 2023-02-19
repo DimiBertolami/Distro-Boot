@@ -27,12 +27,13 @@ namespace QemuUtil
         int hWnd = 0;
         [DllImport("user32.dll", EntryPoint = "ShowWindow")]
         private static extern int ShowWindow(int hwnd, int nCmdShow);
+        public bool HiddenTerminal { get; set; } = false;
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_EX_LAYERED = 0x80000;
-        public const int LWA_ALPHA = 0x2;
-        public const int LWA_COLORKEY = 0x1;
+        //public const int GWL_EXSTYLE = -20;
+        //public const int WS_EX_LAYERED = 0x80000;
+        //public const int LWA_ALPHA = 0x2;
+        //public const int LWA_COLORKEY = 0x1;
 
 
         public MainWindow()
@@ -50,30 +51,38 @@ namespace QemuUtil
         {
             Process ps = new();
             ps.StartInfo.RedirectStandardInput = true;
-            ps.StartInfo.CreateNoWindow = false;
+            ps.StartInfo.CreateNoWindow = HiddenTerminal;
             ps.StartInfo.FileName = "cmd.exe";
             ps.StartInfo.UseShellExecute = false;
             ps.Start();
+            ps.StandardInput.WriteLine("cls");
 
-            IntPtr Handle = ps.Handle;
             Global.ps = ps;
-            Global.Handle = (int)Handle;
+            Global.id = ps.Id;
             return ps;
         }
 
         private void BootHidden(object sender, MouseButtonEventArgs e)
         {
-            if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe")) { Global.ps.StandardInput.WriteLine("powershell -command \"winget install qemu\""); }
-            Global.ps.StandardInput.WriteLine("pushd c:\\pe__data");
+            Process ps = Global.ps;
+            int hWnd = ps.MainWindowHandle.ToInt32();
+            Global.Handle = hWnd;
+            if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe")) 
+            {
+                ps.StandardInput.WriteLine("powershell -command \"winget install qemu\"");
+                ShowWindow(hWnd, SW_HIDE);
+            }
+
+            ps.StandardInput.WriteLine("pushd c:\\pe__data");
             string fileName = IMGs.SelectedValue.ToString();
 
             if (fileName.Contains(".IMG") || fileName.Contains(".img"))
             {
-                Global.ps.StandardInput.WriteLine("%q%  -m 10000 -drive file=" + (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -m 10G -name " + fileName + " -no-reboot");
+                ps.StandardInput.WriteLine("%q%  -m 10000 -drive file=" + (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -m 10G -name " + fileName + " -no-reboot");
             }
             if (fileName.Contains(".ISO") || fileName.Contains(".iso"))
             {
-                Global.ps.StandardInput.WriteLine("%q% -cdrom " + (char)34 + fileName + (char)34 + " -m 10G");
+                ps.StandardInput.WriteLine("%q% -cdrom " + (char)34 + fileName + (char)34 + " -m 10G");
             }
         }
 
@@ -81,7 +90,7 @@ namespace QemuUtil
         {
             OpenFileDialog dlg = new();
             dlg.InitialDirectory = "c:\\pe__data\\";
-            dlg.DefaultExt = "ISO";
+
             dlg.ShowDialog();
             string fileName = dlg.FileName;
             if (!IMGs.Items.Contains(fileName))
@@ -115,7 +124,7 @@ namespace QemuUtil
                     IMGs.Items.Add(item);
                 }
             }
-            IMGs.Items.Refresh();
+            //IMGs.Items.Refresh();
         }
     }
 }
