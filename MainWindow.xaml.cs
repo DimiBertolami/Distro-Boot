@@ -134,7 +134,7 @@ namespace QemuUtil
             ShowWindow(Global.Handle, SW_SHOW);
         }
 
-        static string DownLoadFileInBackground2(string ImageFile)
+        static string DownLoadFileInBackground2(System.Uri ImageFile)
         {
             // Create an HttpClientHandler object and set to use default credentials
             HttpClientHandler handler = new HttpClientHandler();
@@ -196,8 +196,6 @@ namespace QemuUtil
 
         private async void DownloadImage(object sender, RoutedEventArgs e)
         {
-            //Global.webClient = new WebClient();
-            //MessageBox.Show(ISOUrls.SelectedIndex.ToString());
             if (ISOUrls.SelectedIndex.ToString()== "-1")
             {
                 MessageBox.Show("please select an item first..");
@@ -205,59 +203,87 @@ namespace QemuUtil
             else 
             {
                 int positionCombo = ISOUrls.SelectedIndex + 1;
-                //MessageBox.Show((positionCombo).ToString());
+                MessageBox.Show("position in combolist: " + (positionCombo).ToString());
                 Process ps = Global.ps;
                 string response = null;
+
+                WebClient webClient = new();
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback2);
                 switch (positionCombo)
                 {
                     case 1:
-                        response = DownLoadFileInBackground2("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso");
+                        webClient.DownloadFile(
+                            "https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso", 
+                            @"c:\\pe__data\\MX-21.3_x64.iso");
                         break;
                     case 2:
-                        response = DownLoadFileInBackground2("https://mirror.alpix.eu/endeavouros/iso/EndeavourOS_Cassini_neo_22_12.iso");
+                        webClient.DownloadFile(
+                            "https://mirror.alpix.eu/endeavouros/iso/EndeavourOS_Cassini_neo_22_12.iso", 
+                            @"c:\\pe__data\\EndeavourOS_Cassini_neo_22_12.iso");
                         break;
                     case 3:
-                        response = DownLoadFileInBackground2("https://mirror.crexio.com/linuxmint/isos/stable/21.1/linuxmint-21.1-cinnamon-64bit.iso");
+                        webClient.DownloadFile(
+                            "https://mirror.crexio.com/linuxmint/isos/stable/21.1/linuxmint-21.1-cinnamon-64bit.iso", 
+                            @"c:\\pe__data\\linuxmint-21.1-cinnamon-64bit.iso");
                         break;
                     case 4:
-                        response = DownLoadFileInBackground2("https://download.manjaro.org/kde/22.0.3/manjaro-kde-22.0.3-230213-linux61.iso");
+                        webClient.DownloadFile(
+                            "https://download.manjaro.org/kde/22.0.3/manjaro-kde-22.0.3-230213-linux61.iso", 
+                            @"c:\\pe__data\\manjaro-kde-22.0.3-230213-linux61.iso");
                         break;
                     case 5:
-                        response = DownLoadFileInBackground2("https://download.manjaro.org/gnome/22.0.3/manjaro-gnome-22.0.3-230213-linux61.iso");
+                        webClient.DownloadFile(
+                            "https://download.manjaro.org/gnome/22.0.3/manjaro-gnome-22.0.3-230213-linux61.iso", 
+                            @"c:\\pe__data\\manjaro-gnome-22.0.3-230213-linux61.iso");
                         break;
                     case 6:
-                        response = DownLoadFileInBackground2("https://iso.pop-os.org/22.04/amd64/intel/22/pop-os_22.04_amd64_intel_22.iso");
+                        webClient.DownloadFile(
+                            "https://iso.pop-os.org/22.04/amd64/intel/22/pop-os_22.04_amd64_intel_22.iso", 
+                            @"c:\\pe__data\\pop-os_22.04_amd64_intel_22.iso");
                         break;
                     case 7:
-                        response = DownLoadFileInBackground2("https://iso.pop-os.org/22.04/amd64/nvidia/22/pop-os_22.04_amd64_nvidia_22.iso");
+                        webClient.DownloadFile(
+                            "https://iso.pop-os.org/22.04/amd64/nvidia/22/pop-os_22.04_amd64_nvidia_22.iso", 
+                            @"c:\\pe__data\\pop-os_22.04_amd64_nvidia_22.iso");
                         break;
                     case 8:
-                        response = DownLoadFileInBackground2("https://download.fedoraproject.org/pub/fedora/linux/releases/37/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-37-1.7.iso");
+                        webClient.DownloadFile(
+                            "https://download.fedoraproject.org/pub/fedora/linux/releases/37/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-37-1.7.iso", 
+                            @"c:\\pe__data\\Fedora-Workstation-Live-x86_64-37-1.7.iso");
                         break;
                     case 9:
-                        response = DownLoadFileInBackground2("https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso");
+                        webClient.DownloadFile(
+                            "https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso", 
+                            @"c:\\pe__data\\ubuntu-22.04.1-desktop-amd64.iso");
                         break;
                     case 10:
-                        response = DownLoadFileInBackground2("https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso");
+                        webClient.DownloadFile(
+                            "https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso", 
+                            @"c:\\pe__data\\ubuntu-22.04.1-live-server-amd64.iso");
                         break;
                     case 11:
-                        response = DownLoadFileInBackground2("https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-11.6.0-amd64-DVD-1.iso");
+                        webClient.DownloadFile(
+                            "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-11.6.0-amd64-DVD-1.iso", 
+                            @"c:\\pe__data\\debian-11.6.0-amd64-DVD-1.iso");
                         break;
                     case 12:
-                        response = DownLoadFileInBackground2("https://osdn.net/dl/linuxlite/linux-lite-6.2-64bit.iso");
+                        webClient.DownloadFile(
+                            "https://ftp.halifax.rwth-aachen.de/osdn/storage/g/l/li/linuxlite/6.2/linux-lite-6.2-64bit.iso",
+                            @"c:\\pe__data\\linux-lite-6.2-64bit.iso");
                         break;
                     case 13:
-                        response = DownLoadFileInBackground2("https://sourceforge.net/projects/garuda-linux/files/garuda/dr460nized/221019/garuda-dr460nized-linux-zen-221019.iso");
+                        webClient.DownloadFile(
+                            "https://sourceforge.net/projects/garuda-linux/files/garuda/dr460nized/221019/garuda-dr460nized-linux-zen-221019.iso", 
+                            @"c:\\pe__data\\garuda-dr460nized-linux-zen-221019.iso");
                         break;
                     case 14:
-                        response = DownLoadFileInBackground2("https://ams3.dl.elementary.io/download/MTY3Njc4NTg3Nw==/elementaryos-7.0-stable.20230129rc.iso");
+                        webClient.DownloadFile(
+                            "https://ams3.dl.elementary.io/download/MTY3Njc4NTg3Nw==/elementaryos-7.0-stable.20230129rc.iso", 
+                            @"c:\\pe__data\\elementaryos-7.0-stable.20230129rc.iso");
                         break;
                     default:
                         break;
                 }
-                //response. .EnsureSuccessStatusCode();
-                //Task<string> responseBody = response.Contains.
-                ps.StandardInput.WriteLine(":: response " + response);
             }
         }
     }

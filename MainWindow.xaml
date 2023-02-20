@@ -6,31 +6,26 @@
         xmlns:local="clr-namespace:QemuUtil"
         mc:Ignorable="d"
         Title="ISO/IMG boot" 
-        Height="458" 
-        Width="265" 
+        Height="500" 
+        Width="275" 
         Opacity="0.7" 
         ScrollViewer.VerticalScrollBarVisibility="Hidden" 
         ScrollViewer.CanContentScroll="True" 
         ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-    <Grid Margin="0,0,10,3" Background="#FFFCF2FF" OpacityMask="Black">
-        <Border BorderBrush="Black" BorderThickness="1">
-            <Button x:Name="dl" Content="Download" Margin="169,3,8,389" Foreground="#FFEE0909" FontWeight="Bold" Click="DownloadImage"/>
+    <Grid Margin="0,0,0,4" Background="#FFFCF2FF" OpacityMask="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,-7,20">
+            <Button x:Name="dl" Content="Download" Margin="169,3,6,405" Foreground="#FFEE0909" FontWeight="Bold" Click="DownloadImage"/>
         </Border>
-        <Grid Margin="6,29,-4,10">
+        <Grid Margin="6,29,-6,10">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="0*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF1419E3" Foreground="#FFF6F007" Margin="0,0,-1,-8" Grid.RowSpan="2" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
-            <Button Content="Add image" HorizontalAlignment="Left" Margin="4,358,0,0" VerticalAlignment="Top" Click="ScanImages" Width="70" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
-                <!--<Button.OpacityMask>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="Black"/>
-                        <GradientStop Color="White" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.OpacityMask>-->
-            </Button>
-            <Button Content="Remove image" HorizontalAlignment="Left" Margin="74,358,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="99" Height="25" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold">
+            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF1419E3" Foreground="#FFF6F007" Margin="-5,2,-2,55" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+            <Button Content="Remove image" HorizontalAlignment="Left" Margin="71,365,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="103" Height="43" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold" Padding="1,0,1,1">
                 <Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Black"/>
@@ -38,10 +33,19 @@
                     </LinearGradientBrush>
                 </Button.OpacityMask>
             </Button>
-            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal" Height="15" Width="16" RenderTransformOrigin="0.219,11.501" Margin="88,0,0,-300" Checked="ShowTerminal"/>
-            <Button x:Name="Scanner" Content="Scan" Padding="1,-4,1,-1" Margin="166,354,0,0" Height="24" Width="35" Click="ScanImages" RenderTransformOrigin="0.5,0.5" Foreground="#FFED0303" FontWeight="Bold" ToolTip="scan c:\pe__data for images automatically"/>
+            <Button Content="Add image" HorizontalAlignment="Left" Margin="-4,365,0,0" VerticalAlignment="Top" Click="FindImage" Width="74" Height="43" Background="#FFFAF8F8" Foreground="#FFEB0505" FontWeight="Bold" Padding="1,0,1,1">
+                <!--<Button.OpacityMask>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.OpacityMask>-->
+            </Button>
+            <Button x:Name="Scanner" Content="Scan" Padding="1,0,1,-1" Margin="175,365,4,12" Click="ScanImages" RenderTransformOrigin="0.5,0.5" Foreground="#FFED0303" FontWeight="Bold" ToolTip="scan c:\pe__data for images automatically"/>
+            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal" RenderTransformOrigin="0.219,11.501" Margin="233,365,4,79" Checked="ShowTerminal" BorderThickness="5,5,5,5"/>
         </Grid>
-        <ComboBox x:Name="ISOUrls" HorizontalAlignment="Left" Margin="7,4,0,0" VerticalAlignment="Top" Width="160" Background="#FF0E1CF7" Foreground="#FFF7E909" BorderBrush="#FF8113A9" OpacityMask="#FF7482B8">
+        <Label Content="....Concept by Dimi Bertolami..." HorizontalAlignment="Center" Margin="0,438,0,0" VerticalAlignment="Top" Width="274" Padding="49,7,1,-4" Height="26" FontSize="10" FontFamily="Consolas" Foreground="#FF1847DC" BorderBrush="#FF8C1589" Background="#FFF6ACAC" Cursor="Hand" FontStretch="UltraExpanded" FontStyle="Italic" FontWeight="Medium" Opacity="0.65"/>
+        <ComboBox x:Name="ISOUrls" HorizontalAlignment="Left" Margin="1,4,0,0" VerticalAlignment="Top" Width="166" Background="#FF0E1CF7" Foreground="#FFF7E909" BorderBrush="#FF8113A9" Height="26">
             <ComboBoxItem Content="1. MX"/>
             <ComboBoxItem Content="2. EndeavourOS Cassini Neo"/>
             <ComboBoxItem Content="3. Linux Mint"/>
