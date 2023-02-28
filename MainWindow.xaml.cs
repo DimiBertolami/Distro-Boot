@@ -99,6 +99,46 @@ namespace QemuUtil
             return ps;
         }
 
+        private void copy2clip(object sender, MouseEventArgs e)
+        {
+            Clipboard.SetText(Command.Content.ToString());
+            Process ps = Global.ps;
+            ps.StandardInput.WriteLine("cls & echo " + Clipboard.GetText());
+        }
+        public void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            Process ps = Global.ps;
+            string Downloaded = (string.Format("{0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage));
+            MessageBox.Show(Downloaded);
+            string DlSpeed = (string.Format("echo downloadspeed: {0} kb/s..." + (e.BytesReceived / 1024d / Global.stopwatch.Elapsed.TotalSeconds).ToString("0.00")));
+            Global.ps.StandardInput.WriteLine(DlSpeed.ToString() + " - " + Downloaded.ToString());
+            Command.Content = DlSpeed + " " + Downloaded;
+            MessageBox.Show(DlSpeed + " " + Downloaded);
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    ps.StandardInput.WriteLine(e.ProgressPercentage);
+            //    if (i == e.ProgressPercentage)
+            //    {
+
+
+            //    }
+            //}
+        }
+
+
+        public void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            Process ps = Global.ps;
+            if (e.Cancelled == true)
+            {
+                ps.StandardInput.WriteLine("Download has been canceled.");
+            }
+            else
+            {
+                ps.StandardInput.WriteLine("Download complete!");
+            }
+        }
+
         private void BootHidden(object sender, MouseButtonEventArgs e)
         {
             Process ps = Global.ps;
@@ -123,11 +163,12 @@ namespace QemuUtil
                 Command.Content = "\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -cdrom " +
                 (char)34 + fileName + (char)34 + " -m 10G";
             };
-            if (ps.HasExited)
-            {
-                MessageBox.Show("closed!");
-                L_Boot.WindowState = WindowState.Normal;
-            }
+            //if (ps.HasExited)
+            //{
+            //    MessageBox.Show("closed!");
+            //    L_Boot.WindowState = WindowState.Normal;
+            //    L_Boot.UpdateLayout();
+            //}
             ShowOutput.IsChecked = false;
         }
 
@@ -164,95 +205,46 @@ namespace QemuUtil
             ShowWindow(hWnd, SW_HIDE);
 
             int Counter = 0;
-            if (File.Exists("list.txt"))
-            {
-                // Open the stream and read it back.
-                using (StreamReader sr = File.OpenText("list.txt"))
-                {
-                    string s = "";
-                    while (sr.ReadLine() != null)
-                    {
-                        IMGs.Items.Add(s);
-                    }
+            //if (File.Exists("list.txt"))
+            //{
+            //    // Open the stream and read it back.
+            //    using (StreamReader sr = File.OpenText("list.txt"))
+            //    {
+            //        string s = "";
+            //        while (sr.ReadLine() != null)
+            //        {
+            //            IMGs.Items.Add(s);
+            //        }
 
-                }
-                foreach (var item in Directory.EnumerateFiles("c:\\ISO", "*"))
+            //    }
+            IMGs.Items.Clear();
+            foreach (var item in Directory.EnumerateFiles("c:\\ISO", "*"))
+            {
+                if (item.ToUpper().EndsWith(".ISO") || item.ToUpper().EndsWith(".IMG"))
                 {
-                    if (item.ToUpper().EndsWith(".ISO") || item.ToUpper().EndsWith(".IMG"))
-                    {
-                        IMGs.Items.Add(item);
-                        Process ps = Global.ps;
-                    }
+                    IMGs.Items.Add(item);
+                    Process ps = Global.ps;
                 }
+            }
                 //Scanner.IsEnabled = false;
                 //Scanner.Visibility = Visibility.Hidden;
-            }
-
-
-            static void DownloadFileCallback2(object sender, AsyncCompletedEventArgs e)
-            {
-                if (e.Cancelled)
-                {
-                    MessageBox.Show("File download cancelled.");
-                }
-
-                if (e.Error != null)
-                {
-                    MessageBox.Show(e.Error.ToString());
-                }
-            }
-
-
-            // The event that will fire whenever the progress of the WebClient is changed
-            void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-            {
-                Process ps = Global.ps;
-                // Calculate download speed and output it to labelSpeed.
-                Label Speed = new();
-                // Time in hours, minutes, seconds
-                //ps.StandardInput.WriteLine("echo off");
-
-                //string x = string.Format("{0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-
-                //string x = (string.Format("echo downloadspeed: {0} kb/s..." + (e.BytesReceived / 1024d / Global.stopwatch.Elapsed.TotalSeconds).ToString("0.00")) + " downloaded: " + 
-                //    string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"))).ToString();
-                //MessageBox.Show(x, "Dimi was here");
-                for (int i = 0; i < 100; i++)
-                {
-                    ps.StandardInput.WriteLine(e.ProgressPercentage);
-                    if (i == e.ProgressPercentage)
-                    {
-                        //Global.ps.StandardInput.WriteLine("echo {0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-                    }
-                }
-            }
             //}
-
-            // The event that will trigger when the WebClient is completed
         }
 
-        private void copy2clip(object sender, MouseEventArgs e)
+        private void ShowTerminal(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(Command.Content.ToString());
-            Process ps = Global.ps;
-            ps.StandardInput.WriteLine("cls & echo " + Clipboard.GetText());
+            int hWnd = Global.Handle;
+            ShowWindow(hWnd, SW_SHOW);
+            ShowOutput.ToolTip = "Hide Terminal Output";
         }
 
-        private void Completed(object sender, AsyncCompletedEventArgs e)
+        private void HideTerminal(object sender, RoutedEventArgs e)
         {
-            Process ps = Global.ps;
-            // Reset the stopwatch.
-            //sw.Reset();
-
-            if (e.Cancelled == true)
-            {
-                ps.StandardInput.WriteLine("Download has been canceled.");
-            }
-            else
-            {
-                ps.StandardInput.WriteLine("Download completed!");
-            }
+            int hWnd = Global.Handle;
+            ShowWindow(hWnd, SW_HIDE);
+            ShowOutput.ToolTip = "Show Terminal Output";
         }
+
 
         private void DownloadImage(object sender, RoutedEventArgs e)
         {
@@ -264,19 +256,17 @@ namespace QemuUtil
             {
                 int positionCombo = ISOUrls.SelectedIndex;
                 Process ps = Global.ps;
-                //ps.StandardInput.WriteLine("echo position in combolist: " + (positionCombo).ToString());
-                int Counter = 0;
+                Stopwatch sw = new();
+                sw.Start();
+                ps.StandardInput.WriteLine("echo position in combolist: " + (positionCombo).ToString());
                 WebClient webClient = new();
-
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-
-                //webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
 
                 switch (positionCombo)
                 {
                     case 0:
-                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso",
                             @"c:\\ISO\\MX-21.3_x64.iso");
                         IMGs.Items.Add("c:\\ISO\\MX-21.3_x64.iso");
                         break;
@@ -414,168 +404,168 @@ namespace QemuUtil
                         break;
                     case 23:
                         //Uri URL = new Uri("https://sourceforge.net/projects/athena-iso/files/latest/download");
-                        webClient.DownloadFile("https://sourceforge.net/projects/athena-iso/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/athena-iso/files/latest/download",
                             @"c:\\iso\\athenaOS.iso");
                         IMGs.Items.Add("c:\\ISO\\athenaOS.iso");
                         break;
                     case 24:
                         Uri URL2 = new Uri("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso");
-                        webClient.DownloadFile("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso", 
+                        webClient.DownloadFile("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso",
                             @"c:\\ISO\\slax-64bit-11.6.0.iso");
                         IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
                         break;
                     case 25:
-                        webClient.DownloadFile("https://ftp.halifax.rwth-aachen.de/zorinos/16/Zorin-OS-16.2-Core-64-bit-r1.iso", 
+                        webClient.DownloadFile("https://ftp.halifax.rwth-aachen.de/zorinos/16/Zorin-OS-16.2-Core-64-bit-r1.iso",
                             @"c:\\ISO\\Zorin-OS-16.2-Core-64-bit-r1.iso");
                         IMGs.Items.Add("c:\\ISO\\Zorin-OS-16.2-Core-64-bit-r1.iso");
                         break;
                     case 26:
-                        webClient.DownloadFile("https://cdimage.kali.org/kali-2022.4/kali-linux-2022.4-installer-amd64.iso", 
+                        webClient.DownloadFile("https://cdimage.kali.org/kali-2022.4/kali-linux-2022.4-installer-amd64.iso",
                             @"c:\\ISO\\kali-linux-2022.4-installer-amd64.iso");
                         IMGs.Items.Add("c:\\ISO\\kali-linux-2022.4-installer-amd64.iso");
                         break;
                     case 27:
-                        webClient.DownloadFile("https://mirror.koddos.net/calculate-linux/release/23/cld-23-x86_64.iso", 
+                        webClient.DownloadFile("https://mirror.koddos.net/calculate-linux/release/23/cld-23-x86_64.iso",
                             @"c:\\ISO\\cld-23-x86_64.iso");
                         IMGs.Items.Add("c:\\ISO\\cld-23-x86_64.iso");
                         break;
                     case 28:
-                        webClient.DownloadFile("http://www.tinycorelinux.net/13.x/x86/release/CorePlus-current.iso", 
+                        webClient.DownloadFile("http://www.tinycorelinux.net/13.x/x86/release/CorePlus-current.iso",
                             @"c:\\ISO\\CorePlus-current.iso");
                         IMGs.Items.Add("c:\\ISO\\CorePlus-current.iso");
                         break;
                     case 29:
-                        webClient.DownloadFile("https://yum.oracle.com/ISOS/OracleLinux/OL9/u1/x86_64/OracleLinux-R9-U1-x86_64-dvd.iso", 
+                        webClient.DownloadFile("https://yum.oracle.com/ISOS/OracleLinux/OL9/u1/x86_64/OracleLinux-R9-U1-x86_64-dvd.iso",
                             @"c:\\ISO\\OracleLinux-R9-U1-x86_64-dvd.iso");
                         IMGs.Items.Add("c:\\ISO\\OracleLinux-R9-U1-x86_64-dvd.iso");
                         break;
                     case 30:
-                        webClient.DownloadFile("https://ftp.fr.openbsd.org/pub/OpenBSD/7.2/amd64/install72.iso", 
+                        webClient.DownloadFile("https://ftp.fr.openbsd.org/pub/OpenBSD/7.2/amd64/install72.iso",
                             @"c:\\ISO\\install72.iso");
                         IMGs.Items.Add("c:\\ISO\\install72.iso");
                         break;
                     case 31:
-                        webClient.DownloadFile("https://cdimage.ubuntu.com/ubuntustudio/releases/22.04.2/release/ubuntustudio-22.04.2-dvd-amd64.iso", 
+                        webClient.DownloadFile("https://cdimage.ubuntu.com/ubuntustudio/releases/22.04.2/release/ubuntustudio-22.04.2-dvd-amd64.iso",
                             @"c:\\ISO\\ubuntustudio-22.04.2-dvd-amd64.iso");
                         IMGs.Items.Add("c:\\ISO\\ubuntustudio-22.04.2-dvd-amd64.iso");
                         break;
                     case 32:
-                        webClient.DownloadFile("https://sourceforge.net/projects/lxle/files/Final/OS/Focal-64/LXLE-Focal-Release.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/lxle/files/Final/OS/Focal-64/LXLE-Focal-Release.iso/download",
                             @"c:\\ISO\\LXLE-Focal-Release.iso");
                         IMGs.Items.Add("c:\\ISO\\LXLE-Focal-Release.iso");
                         break;
                     case 33:
-                        webClient.DownloadFile("https://sourceforge.net/projects/geckolinux/files/Static/154.220822/GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/geckolinux/files/Static/154.220822/GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso/download",
                             @"c:\\ISO\\GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso");
                         IMGs.Items.Add("c:\\ISO\\GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso");
                         break;
                     case 34:
-                        webClient.DownloadFile("https://peropesis.org/peropesis/Peropesis-2.0-live.iso", 
+                        webClient.DownloadFile("https://peropesis.org/peropesis/Peropesis-2.0-live.iso",
                             @"c:\\ISO\\Peropesis-2.0-live.iso");
                         IMGs.Items.Add("c:\\ISO\\Peropesis-2.0-live.iso");
                         break;
                     case 35:
-                        webClient.DownloadFile("https://pub-236acba899534258ba381237ad7d8714.r2.dev/RebornOS-ISO/rebornos_iso-2023.01.20-x86_64.iso", 
+                        webClient.DownloadFile("https://pub-236acba899534258ba381237ad7d8714.r2.dev/RebornOS-ISO/rebornos_iso-2023.01.20-x86_64.iso",
                             @"c:\\ISO\\rebornos_iso-2023.01.20-x86_64.iso");
                         IMGs.Items.Add("c:\\ISO\\rebornos_iso-2023.01.20-x86_64.iso");
                         break;
                     case 36:
-                        webClient.DownloadFile("https://sourceforge.net/projects/makulu/files/downloads/Shift/MakuluLinux-ShiFt-U-2022-12-29.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/makulu/files/downloads/Shift/MakuluLinux-ShiFt-U-2022-12-29.iso/download",
                             @"c:\\ISO\\MakuluLinux-ShiFt-U-2022-12-29.iso");
                         IMGs.Items.Add("c:\\ISO\\MakuluLinux-ShiFt-U-2022-12-29.iso");
                         break;
                     case 37:
-                        webClient.DownloadFile("https://sourceforge.net/projects/linuxkodachi/files/kodachi-8.27-64-kernel-6.2.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxkodachi/files/kodachi-8.27-64-kernel-6.2.iso/download",
                                 @"c:\\ISO\\kodachi-8.27-64-kernel-6.2.iso");
                         IMGs.Items.Add("c:\\ISO\\kodachi-8.27-64-kernel-6.2.iso");
                         break;
                     case 38:
-                        webClient.DownloadFile("https://sourceforge.net/projects/bodhilinux/files/6.0.0/bodhi-6.0.0-64-apppack.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/bodhilinux/files/6.0.0/bodhi-6.0.0-64-apppack.iso/download",
                                 @"c:\\ISO\\bodhi-6.0.0-64-apppack.iso");
                         IMGs.Items.Add("c:\\ISO\\bodhi-6.0.0-64-apppack.iso");
                         break;
                     case 39:
-                        webClient.DownloadFile("https://os.tuxedocomputers.com/TUXEDO-OS-2-202302271716.iso", 
+                        webClient.DownloadFile("https://os.tuxedocomputers.com/TUXEDO-OS-2-202302271716.iso",
                                 @"c:\\ISO\\TUXEDO-OS-2-202302271716.iso");
                         IMGs.Items.Add("c:\\ISO\\TUXEDO-OS-2-202302271716.iso");
                         break;
                     case 40:
-                        webClient.DownloadFile("https://download.tails.net/tails/stable/tails-amd64-5.10/tails-amd64-5.10.iso", 
+                        webClient.DownloadFile("https://download.tails.net/tails/stable/tails-amd64-5.10/tails-amd64-5.10.iso",
                                 @"c:\\ISO\\tails-amd64-5.10.iso");
                         IMGs.Items.Add("c:\\ISO\\tails-amd64-5.10.iso");
                         break;
                     case 41:
-                        webClient.DownloadFile("https://mirrors.slackware.com/slackware/slackware-iso/slackware64-15.0-iso/slackware64-15.0-install-dvd.iso", 
+                        webClient.DownloadFile("https://mirrors.slackware.com/slackware/slackware-iso/slackware64-15.0-iso/slackware64-15.0-install-dvd.iso",
                                 @"c:\\ISO\\slackware64-15.0-install-dvd.iso");
                         IMGs.Items.Add("c:\\ISO\\slackware64-15.0-install-dvd.iso");
                         break;
                     case 42:
-                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso/download",
                                 @"c:\\ISO\\linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso");
                         IMGs.Items.Add("c:\\ISO\\linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso");
                         break;
                     case 43:
-                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso/download",
                                 @"c:\\ISO\\linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso");
                         IMGs.Items.Add("c:\\ISO\\linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso");
                         break;
                     case 44:
-                        webClient.DownloadFile("https://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso", 
+                        webClient.DownloadFile("https://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso",
                                 @"c:\\ISO\\fossapup64-9.5.iso");
                         IMGs.Items.Add("c:\\ISO\\fossapup64-9.5.iso");
                         break;
                     case 45:
-                        webClient.DownloadFile("https://ftp.belnet.be/arcolinux/iso/v23.03.01/arcolinuxb-awesome-v23.03.01-x86_64.iso", 
+                        webClient.DownloadFile("https://ftp.belnet.be/arcolinux/iso/v23.03.01/arcolinuxb-awesome-v23.03.01-x86_64.iso",
                                 @"c:\\ISO\\arcolinuxb-awesome-v23.03.01-x86_64.iso");
                         IMGs.Items.Add("c:\\ISO\\arcolinuxb-awesome-v23.03.01-x86_64.iso");
                         break;
                     case 46:
-                        webClient.DownloadFile("https://distro.ibiblio.org/easyos/amd64/releases/kirkstone/2023/5.0/easy-5.0-amd64.img", 
+                        webClient.DownloadFile("https://distro.ibiblio.org/easyos/amd64/releases/kirkstone/2023/5.0/easy-5.0-amd64.img",
                                 @"c:\\ISO\\easy-5.0-amd64.img");
                         IMGs.Items.Add("c:\\ISO\\easy-5.0-amd64.img");
                         break;
                     case 47:
-                        webClient.DownloadFile("https://sourceforge.net/projects/nitruxos/files/Release/ISO/nitrux-nx-desktop-d5c7cdff-amd64.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/nitruxos/files/Release/ISO/nitrux-nx-desktop-d5c7cdff-amd64.iso/download",
                                 @"c:\\ISO\\nitrux-nx-desktop-d5c7cdff-amd64.iso");
                         IMGs.Items.Add("c:\\ISO\\nitrux-nx-desktop-d5c7cdff-amd64.iso");
                         break;
                     case 48:
-                        webClient.DownloadFile("https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso", 
+                        webClient.DownloadFile("https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso",
                                 @"c:\\ISO\\Rocky-9.1-x86_64-dvd.iso");
                         IMGs.Items.Add("c:\\ISO\\Rocky-9.1-x86_64-dvd.iso");
                         break;
                     case 49:
-                        webClient.DownloadFile("https://sourceforge.net/projects/salix/files/15.0/salix64-xfce-15.0.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/salix/files/15.0/salix64-xfce-15.0.iso/download",
                                 @"c:\\ISO\\salix64-xfce-15.0.iso");
                         IMGs.Items.Add("c:\\ISO\\salix64-xfce-15.0.iso");
                         break;
                     case 50:
-                        webClient.DownloadFile("https://files.devuan.org/devuan_beowulf/installer-iso/devuan_beowulf_3.1.1_amd64_desktop.iso", 
+                        webClient.DownloadFile("https://files.devuan.org/devuan_beowulf/installer-iso/devuan_beowulf_3.1.1_amd64_desktop.iso",
                                 @"c:\\ISO\\devuan_beowulf_3.1.1_amd64_desktop.iso");
                         IMGs.Items.Add("c:\\ISO\\devuan_beowulf_3.1.1_amd64_desktop.iso");
                         break;
                     case 51:
-                        webClient.DownloadFile("https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/releases/amd64/autobuilds/current-livegui-amd64/livegui-amd64-20230226T163212Z.iso", 
+                        webClient.DownloadFile("https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/releases/amd64/autobuilds/current-livegui-amd64/livegui-amd64-20230226T163212Z.iso",
                                 @"c:\\ISO\\livegui-amd64-20230226T163212Z.iso");
                         IMGs.Items.Add("c:\\ISO\\livegui-amd64-20230226T163212Z.iso");
                         break;
                     case 52:
-                        webClient.DownloadFile("https://downloads.puri.sm/byzantium/gnome/2022-06-02/pureos-10~devel-gnome-live-20220602_amd64.iso", 
+                        webClient.DownloadFile("https://downloads.puri.sm/byzantium/gnome/2022-06-02/pureos-10~devel-gnome-live-20220602_amd64.iso",
                                 @"c:\\ISO\\pureos-10~devel-gnome-live-20220602_amd64.iso");
                         IMGs.Items.Add("c:\\ISO\\pureos-10~devel-gnome-live-20220602_amd64.iso");
                         break;
                     case 53:
-                        webClient.DownloadFile("https://fbi.cdn.euro-linux.com/isos/ELD-9-x86_64-latest.iso", 
+                        webClient.DownloadFile("https://fbi.cdn.euro-linux.com/isos/ELD-9-x86_64-latest.iso",
                                 @"c:\\ISO\\ELD-9-x86_64-latest.iso");
                         IMGs.Items.Add("c:\\ISO\\ELD-9-x86_64-latest.iso");
                         break;
                     case 54:
-                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/latest/download",
                                 @"c:\\ISO\\MXLinux.iso");
                         IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
                         break;
                     case 55:
-                        webClient.DownloadFile("https://sourceforge.net/projects/primeos/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/primeos/files/latest/download",
                                 @"c:\\ISO\\primos.iso");
                         IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
                         break;
@@ -585,57 +575,57 @@ namespace QemuUtil
                         IMGs.Items.Add("c:\\ISO\\blissos.iso");
                         break;
                     case 57:
-                        webClient.DownloadFile("https://sourceforge.net/projects/reactos/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/reactos/files/latest/download",
                                 @"c:\\ISO\\reactos.iso");
                         IMGs.Items.Add("c:\\ISO\\reactos.iso");
                         break;
                     case 58:
-                        webClient.DownloadFile("https://sourceforge.net/projects/peppermintos/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/peppermintos/files/latest/download",
                                 @"c:\\ISO\\peppermintos.iso");
                         IMGs.Items.Add("c:\\ISO\\peppermintos.iso");
                         break;
                     case 59:
-                        webClient.DownloadFile("https://cdn.download.clearlinux.org/releases/37980/clear/clear-37980-live-desktop.iso", 
+                        webClient.DownloadFile("https://cdn.download.clearlinux.org/releases/37980/clear/clear-37980-live-desktop.iso",
                                 @"c:\\ISO\\clear-37980-live-desktop.iso");
                         IMGs.Items.Add("c:\\ISO\\clear-37980-live-desktop.iso");
                         break;
                     case 60:
-                        webClient.DownloadFile("https://sourceforge.net/projects/loc-os/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/loc-os/files/latest/download",
                                 @"c:\\ISO\\Redcore.Linux.Hardened.2301.Sirius.KDE.amd64.iso");
                         IMGs.Items.Add("c:\\ISO\\Redcore.Linux.Hardened.2301.Sirius.KDE.amd64.iso");
                         break;
                     case 61:
-                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download", 
-                                @"c:\\ISO\\mabox.iso");
-                        IMGs.Items.Add("c:\\ISO\\mabox.iso");
+                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download",
+                                @"c:\\ISO\\locos.iso");
+                        IMGs.Items.Add("c:\\ISO\\locos.iso");
                         break;
                     case 62:
-                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download",
                                 @"c:\\ISO\\mabox.iso");
                         IMGs.Items.Add("c:\\ISO\\mabox.iso");
                         break;
                     case 63:
-                        webClient.DownloadFile("https://sourceforge.net/projects/reloaded-caf/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/reloaded-caf/files/latest/download",
                             @"c:\\ISO\\reloadedos.iso");
                         IMGs.Items.Add("c:\\ISO\\reloadedos.iso");
                         break;
                     case 64:
-                        webClient.DownloadFile("https://sourceforge.net/projects/emmabuntus/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/emmabuntus/files/latest/download",
                                 @"c:\\ISO\\emmabuntus.iso");
                         IMGs.Items.Add("c:\\ISO\\emmabuntus.iso");
                         break;
                     case 65:
-                        webClient.DownloadFile("https://sourceforge.net/projects/arcolinux-community-editions/files/xtended/arcolinuxb-xtended-v23.03.01-x86_64.iso/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/arcolinux-community-editions/files/xtended/arcolinuxb-xtended-v23.03.01-x86_64.iso/download",
                                 @"c:\\ISO\\arcolinuxb-xtended-v23.03.01-x86_64.iso");
                         IMGs.Items.Add("c:\\ISO\\arcolinuxb-xtended-v23.03.01-x86_64.iso");
                         break;
                     case 66:
-                        webClient.DownloadFile("https://sourceforge.net/projects/openmandriva/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/openmandriva/files/latest/download",
                                 @"c:\\ISO\\openmandriva.iso");
                         IMGs.Items.Add("c:\\ISO\\openmandriva.iso");
                         break;
                     case 67:
-                        webClient.DownloadFile("https://sourceforge.net/projects/legacyoslinux/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/legacyoslinux/files/latest/download",
                                 @"c:\\ISO\\legacyoslinux.iso");
                         IMGs.Items.Add("c:\\ISO\\legacyoslinux.iso");
                         break;
@@ -647,7 +637,7 @@ namespace QemuUtil
                         IMGs.Items.Add("c:\\ISO\\Xiaopan6.4.1.iso");
                         break;
                     case 69:
-                        webClient.DownloadFile("https://sourceforge.net/projects/cachyos-arch/files/latest/download", 
+                        webClient.DownloadFile("https://sourceforge.net/projects/cachyos-arch/files/latest/download",
                                 @"c:\\ISO\\cachyos.iso");
                         IMGs.Items.Add("c:\\ISO\\cachyos.iso");
                         break;
@@ -656,19 +646,6 @@ namespace QemuUtil
                 }
             }
         }
-
-        private void ShowTerminal(object sender, RoutedEventArgs e)
-        {
-            int hWnd = Global.Handle;
-            ShowWindow(hWnd, SW_SHOW);
-            ShowOutput.ToolTip = "Hide Terminal Output";
-        }
-
-        private void HideTerminal(object sender, RoutedEventArgs e)
-        {
-            int hWnd = Global.Handle;
-            ShowWindow(hWnd, SW_HIDE);
-            ShowOutput.ToolTip = "Show Terminal Output";
-        }
     }
 }
+

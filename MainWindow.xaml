@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QemuUtil"
         mc:Ignorable="d"
-        Title="L-Boot: portable linux image tester by D.Bertolami" 
+        Title="DistroBoot: a portable linux distro tester by D.Bertolami" 
         Height="500" 
         Width="500" 
         ResizeMode="NoResize"
@@ -17,29 +17,24 @@
     <Grid Margin="0,0,0,4" Background="#FFFCF2FF" OpacityMask="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="54*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,-7,41" Grid.ColumnSpan="2">
-            <Button x:Name="dl" Content="Download" Margin="167,1,1,384" Foreground="#FFFFF000" Click="DownloadImage" Background="#FFBBCBE8" FontWeight="Bold" FontSize="14" FontFamily="Arial Black"/>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,1,49">
+            <Button x:Name="dl" Content="Download" Margin="168,1,3,381" Foreground="#FF666D17" Click="DownloadImage" Background="#FFEDF1F9" FontWeight="Bold" FontSize="14" FontFamily="Arial Black" Padding="1,-5,1,1"/>
         </Border>
-        <Grid Margin="1,29,-6,31" Grid.Column="1">
+        <Grid Margin="10,29,-6,31">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="0*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FF9AD6F3" Foreground="#FF224515" Margin="-5,2,8,55" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" FontFamily="Source Code Pro Black">
+            <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FFEAF2F6" Foreground="#FF224515" Margin="-8,2,9,55" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" FontFamily="Source Code Pro Black">
                 <!--<CheckBox Background="#FF8EE7A6" Foreground="#FF0B0501" Content="1. MX Linux"/>-->
             </ListBox>
-            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal output" RenderTransformOrigin="0.219,11.501" Margin="435,311,26,69" BorderThickness="5,5,5,5" Foreground="#FF171702" IsChecked="True" BorderBrush="#FF0B0701" Padding="3,-1,0,0" MinWidth="30" MinHeight="30" Checked="ShowTerminal" Unchecked="HideTerminal">
-                <CheckBox.Background>
-                    <SolidColorBrush Color="#FFF6C0F1" Opacity="0.65"/>
-                </CheckBox.Background>
-            </CheckBox>
-            <Button x:Name="Scanner" Content="Scan" Padding="1,0,1,-1" Margin="175,345,4,10" Click="ScanImages" RenderTransformOrigin="0.498,0.956" Foreground="#FFF3FF05" ToolTip="scan c:\pe__data for images automatically" Background="#FFBBCBE8" FontFamily="Arial Black" FontSize="14"/>
-            <Button Content="Remove image" HorizontalAlignment="Left" Margin="71,345,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="103" Height="43" Background="#FFBBCBE8" Foreground="#FFF3FF05" FontWeight="Bold" Padding="1,0,1,1">
+            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal output" RenderTransformOrigin="0.219,11.501" Margin="452,323,9,57" BorderThickness="5,5,5,5" Foreground="#FFF9112A" IsChecked="True" BorderBrush="#FF0B0701" Padding="3,-1,0,0" MinWidth="30" MinHeight="30" Checked="ShowTerminal" Unchecked="HideTerminal" Background="{x:Null}"/>
+            <Button x:Name="Scanner" Content="Scan" Padding="1,0,1,-1" Margin="177,345,11,22" Click="ScanImages" RenderTransformOrigin="0.498,0.956" Foreground="#FF474A14" ToolTip="scan c:\pe__data for images automatically" Background="#FFEDF1F9" FontFamily="Arial Black" FontSize="14"/>
+            <Button Content="Remove image" HorizontalAlignment="Left" Margin="71,345,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="103" Height="31" Background="#FFEDF1F9" Foreground="#FF494B17" FontWeight="Bold" Padding="1,0,1,1">
                 <Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Black"/>
@@ -47,7 +42,7 @@
                     </LinearGradientBrush>
                 </Button.OpacityMask>
             </Button>
-            <Button Content="Add image" HorizontalAlignment="Left" Margin="-4,345,0,0" VerticalAlignment="Top" Click="FindImage" Width="74" Height="43" Background="#FFBBCBE8" Foreground="#FFF3FF05" FontWeight="Bold" Padding="1,0,1,1">
+            <Button Content="Add image" HorizontalAlignment="Left" Margin="-6,345,0,0" VerticalAlignment="Top" Click="FindImage" Width="74" Height="31" Background="#FFEDF1F9" Foreground="#FF41440E" FontWeight="Bold" Padding="1,0,1,1">
                 <Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.6,1" StartPoint="0.5,0.75">
                         <GradientStop Color="Black"/>
@@ -56,7 +51,7 @@
                 </Button.OpacityMask>
             </Button>
         </Grid>
-        <ComboBox x:Name="ISOUrls" HorizontalAlignment="Left" Margin="1,2,0,0" VerticalAlignment="Top" Width="166" Background="#FFBBE8CD" Foreground="#FFF30C0C" BorderBrush="{x:Null}" Height="28" ScrollViewer.HorizontalScrollBarVisibility="Visible"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Text="Distrowatch" Grid.ColumnSpan="2">
+        <ComboBox x:Name="ISOUrls" HorizontalAlignment="Left" Margin="4,2,0,0" VerticalAlignment="Top" Width="162" Background="#FFEDF1F9" Foreground="#FFF30C0C" BorderBrush="{x:Null}" Height="26" ScrollViewer.HorizontalScrollBarVisibility="Visible"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Text="Distrowatch ISO Repository">
             <ComboBoxItem Content="MX" Background="#FF1200FF" Foreground="#FFF7F513" UseLayoutRounding="True"  FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="EndeavourOS Cassini Neo" Background="#FF1200FF" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="Linux Mint" Background="#FF2111F9" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
@@ -128,10 +123,11 @@
             <ComboBoxItem Background="#FF3C073E" Content="Xiaopan OS" Foreground="#FFF3DE0C"/>
             <ComboBoxItem Background="#FF250423" Content="Cachy OS" Foreground="#FFD5F30C"/>
         </ComboBox>
-        <Label x:Name="Command" Content="....lINUX ISO/IMG image boot launcher by D.Bertolami..." Margin="0,410,0,0" Width="500" Padding="5,0,1,0" Height="46" FontSize="8" FontFamily="Consolas" Foreground="#FF1847DC" BorderBrush="#FF8C1589" Cursor="IBeam" FontStretch="UltraExpanded" FontStyle="Italic" FontWeight="Medium" Opacity="0.65" VerticalAlignment="Top" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Bottom" Grid.ColumnSpan="2" ScrollViewer.CanContentScroll="True" ClipToBounds="True" MouseEnter="copy2clip" >
-            <Label.Background>
+        <Label x:Name="Command" Margin="0,410,0,0" Width="500" Padding="5,0,1,0" Height="46" FontSize="8" FontFamily="Consolas" Foreground="#FF1847DC" BorderBrush="#FF8C1589" Cursor="IBeam" FontStretch="UltraExpanded" FontStyle="Italic" FontWeight="Medium" Opacity="0.65" VerticalAlignment="Top" HorizontalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Bottom" ScrollViewer.CanContentScroll="True" ClipToBounds="True" Content="">
+            <!--<Label.Background>
                 <SolidColorBrush Color="#FFF6ACAC" Opacity="0.5"/>
-            </Label.Background>
+            </Label.Background>-->
+            <!--<Label x:Name="Downloaded" Content="dl"/>-->
         </Label>
     </Grid>
 </Window>
