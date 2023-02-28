@@ -23,7 +23,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-//using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using QemuUtil.Entities;
 
 namespace QemuUtil
 {
@@ -54,6 +54,26 @@ namespace QemuUtil
 
             InitializeComponent();
             Process ps = CreateProcess();
+            int id = 0;
+            string name = "MX Linux";
+            string url = "https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso";
+            string description = "MX Linux, a desktop-oriented Linux distribution based on Debian's \"Stable\" " +
+                                 "branch, is a cooperative venture between the antiX and former MEPIS Linux com" +
+                                 "munities. Using Xfce as the default desktop (with separate KDE Plasma and Flux" +
+                                 "box editions also available), it is a mid-weight operating system designed to " +
+                                 "combine an elegant and efficient desktop with simple configuration, high stabi" +
+                                 "lity, solid performance and medium-sized footprint.";
+            
+            DistroList list = new(++id, "MX Linux", "https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso");
+            //ps.StandardInput.WriteLine(list.id + " " + list.Name + " " + list.url);
+            
+            list = new(++id, "Endeavour OS", "https://mirror.alpix.eu/endeavouros/iso/EndeavourOS_Cassini_neo_22_12.iso");
+            //ps.StandardInput.WriteLine(list.id + " " + list.Name + " " + list.url);
+
+            list = new(++id, "Linux Mint", "https://mirror.crexio.com/linuxmint/isos/stable/21.1/linuxmint-21.1-cinnamon-64bit.iso");
+            //ps.StandardInput.WriteLine(list.id + " " + list.Name + " " + list.url);
+
+
             Global.ps = ps;
             Global.id = ps.Id;
             int hWnd = ps.MainWindowHandle.ToInt32();
@@ -256,24 +276,8 @@ namespace QemuUtil
                 switch (positionCombo)
                 {
                     case 0:
-
-                        try
-                        {
-                            // The variable that will be holding the url address (making sure it starts with http://)
-                            Uri URL1 = new Uri("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso");
-
-
-                            // Start downloading the file
-                            webClient.DownloadFileAsync(URL1, @"c:\\ISO\\MX-21.3_x64.iso");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-
-                        //webClient.DownloadFile(
-                        //    "https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso",
-                        //    @"c:\\ISO\\MX-21.3_x64.iso");
+                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-21.3_x64.iso", 
+                            @"c:\\ISO\\MX-21.3_x64.iso");
                         IMGs.Items.Add("c:\\ISO\\MX-21.3_x64.iso");
                         break;
                     case 1:
@@ -374,9 +378,9 @@ namespace QemuUtil
                         break;
                     case 17:
                         webClient.DownloadFile(
-                            "http://www.dragonflybsd.org/download/",
-                            @"c:\\ISO\\dragonflyBSD.iso");
-                        IMGs.Items.Add("c:\\ISO\\dragonflyBSD.iso");
+                            "https://mirror-master.dragonflybsd.org/iso-images/dfly-x86_64-6.4.0_REL.iso",
+                            @"c:\\ISO\\dfly-x86_64-6.4.0_REL.iso");
+                        IMGs.Items.Add("c:\\ISO\\dfly-x86_64-6.4.0_REL.iso");
                         break;
                     case 18:
                         webClient.DownloadFile(
@@ -409,39 +413,244 @@ namespace QemuUtil
                         IMGs.Items.Add("c:\\ISO\\Neptune75-20220814.iso");
                         break;
                     case 23:
-                        Uri URL = new Uri("https://sourceforge.net/projects/athena-iso/files/latest/download");
-                        try
-                        {
-
-                            webClient.DownloadFileAsync(
-                        URL,
-                        @"c:\\iso\\athenaOS.iso");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
+                        //Uri URL = new Uri("https://sourceforge.net/projects/athena-iso/files/latest/download");
+                        webClient.DownloadFile("https://sourceforge.net/projects/athena-iso/files/latest/download", 
+                            @"c:\\iso\\athenaOS.iso");
                         IMGs.Items.Add("c:\\ISO\\athenaOS.iso");
                         break;
                     case 24:
-
-                        try
-                        {
-                            Stopwatch sw = new();
-                            Global.stopwatch = sw;
-                            sw.Start();
-
-                            Uri URL2 = new Uri("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso");
-                            webClient.DownloadFileAsync(URL2, @"c:\\ISO\\slax-64bit-11.6.0.iso");
-                            IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
+                        Uri URL2 = new Uri("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso");
+                        webClient.DownloadFile("https://ftp.linux.cz/pub/linux/slax/Slax-11.x/slax-64bit-11.6.0.iso", 
+                            @"c:\\ISO\\slax-64bit-11.6.0.iso");
+                        IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
                         break;
-
-
+                    case 25:
+                        webClient.DownloadFile("https://ftp.halifax.rwth-aachen.de/zorinos/16/Zorin-OS-16.2-Core-64-bit-r1.iso", 
+                            @"c:\\ISO\\Zorin-OS-16.2-Core-64-bit-r1.iso");
+                        IMGs.Items.Add("c:\\ISO\\Zorin-OS-16.2-Core-64-bit-r1.iso");
+                        break;
+                    case 26:
+                        webClient.DownloadFile("https://cdimage.kali.org/kali-2022.4/kali-linux-2022.4-installer-amd64.iso", 
+                            @"c:\\ISO\\kali-linux-2022.4-installer-amd64.iso");
+                        IMGs.Items.Add("c:\\ISO\\kali-linux-2022.4-installer-amd64.iso");
+                        break;
+                    case 27:
+                        webClient.DownloadFile("https://mirror.koddos.net/calculate-linux/release/23/cld-23-x86_64.iso", 
+                            @"c:\\ISO\\cld-23-x86_64.iso");
+                        IMGs.Items.Add("c:\\ISO\\cld-23-x86_64.iso");
+                        break;
+                    case 28:
+                        webClient.DownloadFile("http://www.tinycorelinux.net/13.x/x86/release/CorePlus-current.iso", 
+                            @"c:\\ISO\\CorePlus-current.iso");
+                        IMGs.Items.Add("c:\\ISO\\CorePlus-current.iso");
+                        break;
+                    case 29:
+                        webClient.DownloadFile("https://yum.oracle.com/ISOS/OracleLinux/OL9/u1/x86_64/OracleLinux-R9-U1-x86_64-dvd.iso", 
+                            @"c:\\ISO\\OracleLinux-R9-U1-x86_64-dvd.iso");
+                        IMGs.Items.Add("c:\\ISO\\OracleLinux-R9-U1-x86_64-dvd.iso");
+                        break;
+                    case 30:
+                        webClient.DownloadFile("https://ftp.fr.openbsd.org/pub/OpenBSD/7.2/amd64/install72.iso", 
+                            @"c:\\ISO\\install72.iso");
+                        IMGs.Items.Add("c:\\ISO\\install72.iso");
+                        break;
+                    case 31:
+                        webClient.DownloadFile("https://cdimage.ubuntu.com/ubuntustudio/releases/22.04.2/release/ubuntustudio-22.04.2-dvd-amd64.iso", 
+                            @"c:\\ISO\\ubuntustudio-22.04.2-dvd-amd64.iso");
+                        IMGs.Items.Add("c:\\ISO\\ubuntustudio-22.04.2-dvd-amd64.iso");
+                        break;
+                    case 32:
+                        webClient.DownloadFile("https://sourceforge.net/projects/lxle/files/Final/OS/Focal-64/LXLE-Focal-Release.iso/download", 
+                            @"c:\\ISO\\LXLE-Focal-Release.iso");
+                        IMGs.Items.Add("c:\\ISO\\LXLE-Focal-Release.iso");
+                        break;
+                    case 33:
+                        webClient.DownloadFile("https://sourceforge.net/projects/geckolinux/files/Static/154.220822/GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso/download", 
+                            @"c:\\ISO\\GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso");
+                        IMGs.Items.Add("c:\\ISO\\GeckoLinux_STATIC_Cinnamon.x86_64-154.220822.0.iso");
+                        break;
+                    case 34:
+                        webClient.DownloadFile("https://peropesis.org/peropesis/Peropesis-2.0-live.iso", 
+                            @"c:\\ISO\\Peropesis-2.0-live.iso");
+                        IMGs.Items.Add("c:\\ISO\\Peropesis-2.0-live.iso");
+                        break;
+                    case 35:
+                        webClient.DownloadFile("https://pub-236acba899534258ba381237ad7d8714.r2.dev/RebornOS-ISO/rebornos_iso-2023.01.20-x86_64.iso", 
+                            @"c:\\ISO\\rebornos_iso-2023.01.20-x86_64.iso");
+                        IMGs.Items.Add("c:\\ISO\\rebornos_iso-2023.01.20-x86_64.iso");
+                        break;
+                    case 36:
+                        webClient.DownloadFile("https://sourceforge.net/projects/makulu/files/downloads/Shift/MakuluLinux-ShiFt-U-2022-12-29.iso/download", 
+                            @"c:\\ISO\\MakuluLinux-ShiFt-U-2022-12-29.iso");
+                        IMGs.Items.Add("c:\\ISO\\MakuluLinux-ShiFt-U-2022-12-29.iso");
+                        break;
+                    case 37:
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxkodachi/files/kodachi-8.27-64-kernel-6.2.iso/download", 
+                                @"c:\\ISO\\kodachi-8.27-64-kernel-6.2.iso");
+                        IMGs.Items.Add("c:\\ISO\\kodachi-8.27-64-kernel-6.2.iso");
+                        break;
+                    case 38:
+                        webClient.DownloadFile("https://sourceforge.net/projects/bodhilinux/files/6.0.0/bodhi-6.0.0-64-apppack.iso/download", 
+                                @"c:\\ISO\\bodhi-6.0.0-64-apppack.iso");
+                        IMGs.Items.Add("c:\\ISO\\bodhi-6.0.0-64-apppack.iso");
+                        break;
+                    case 39:
+                        webClient.DownloadFile("https://os.tuxedocomputers.com/TUXEDO-OS-2-202302271716.iso", 
+                                @"c:\\ISO\\TUXEDO-OS-2-202302271716.iso");
+                        IMGs.Items.Add("c:\\ISO\\TUXEDO-OS-2-202302271716.iso");
+                        break;
+                    case 40:
+                        webClient.DownloadFile("https://download.tails.net/tails/stable/tails-amd64-5.10/tails-amd64-5.10.iso", 
+                                @"c:\\ISO\\tails-amd64-5.10.iso");
+                        IMGs.Items.Add("c:\\ISO\\tails-amd64-5.10.iso");
+                        break;
+                    case 41:
+                        webClient.DownloadFile("https://mirrors.slackware.com/slackware/slackware-iso/slackware64-15.0-iso/slackware64-15.0-install-dvd.iso", 
+                                @"c:\\ISO\\slackware64-15.0-install-dvd.iso");
+                        IMGs.Items.Add("c:\\ISO\\slackware64-15.0-install-dvd.iso");
+                        break;
+                    case 42:
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso/download", 
+                                @"c:\\ISO\\linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso");
+                        IMGs.Items.Add("c:\\ISO\\linuxfx-11.2.22.04.7-win10-theme-cinnamon-wxd-13.0.iso");
+                        break;
+                    case 43:
+                        webClient.DownloadFile("https://sourceforge.net/projects/linuxfxdevil/files/linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso/download", 
+                                @"c:\\ISO\\linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso");
+                        IMGs.Items.Add("c:\\ISO\\linuxfx-11.2.22.04.7-win11-theme-plasma-wxd-13.0.iso");
+                        break;
+                    case 44:
+                        webClient.DownloadFile("https://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso", 
+                                @"c:\\ISO\\fossapup64-9.5.iso");
+                        IMGs.Items.Add("c:\\ISO\\fossapup64-9.5.iso");
+                        break;
+                    case 45:
+                        webClient.DownloadFile("https://ftp.belnet.be/arcolinux/iso/v23.03.01/arcolinuxb-awesome-v23.03.01-x86_64.iso", 
+                                @"c:\\ISO\\arcolinuxb-awesome-v23.03.01-x86_64.iso");
+                        IMGs.Items.Add("c:\\ISO\\arcolinuxb-awesome-v23.03.01-x86_64.iso");
+                        break;
+                    case 46:
+                        webClient.DownloadFile("https://distro.ibiblio.org/easyos/amd64/releases/kirkstone/2023/5.0/easy-5.0-amd64.img", 
+                                @"c:\\ISO\\easy-5.0-amd64.img");
+                        IMGs.Items.Add("c:\\ISO\\easy-5.0-amd64.img");
+                        break;
+                    case 47:
+                        webClient.DownloadFile("https://sourceforge.net/projects/nitruxos/files/Release/ISO/nitrux-nx-desktop-d5c7cdff-amd64.iso/download", 
+                                @"c:\\ISO\\nitrux-nx-desktop-d5c7cdff-amd64.iso");
+                        IMGs.Items.Add("c:\\ISO\\nitrux-nx-desktop-d5c7cdff-amd64.iso");
+                        break;
+                    case 48:
+                        webClient.DownloadFile("https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso", 
+                                @"c:\\ISO\\Rocky-9.1-x86_64-dvd.iso");
+                        IMGs.Items.Add("c:\\ISO\\Rocky-9.1-x86_64-dvd.iso");
+                        break;
+                    case 49:
+                        webClient.DownloadFile("https://sourceforge.net/projects/salix/files/15.0/salix64-xfce-15.0.iso/download", 
+                                @"c:\\ISO\\salix64-xfce-15.0.iso");
+                        IMGs.Items.Add("c:\\ISO\\salix64-xfce-15.0.iso");
+                        break;
+                    case 50:
+                        webClient.DownloadFile("https://files.devuan.org/devuan_beowulf/installer-iso/devuan_beowulf_3.1.1_amd64_desktop.iso", 
+                                @"c:\\ISO\\devuan_beowulf_3.1.1_amd64_desktop.iso");
+                        IMGs.Items.Add("c:\\ISO\\devuan_beowulf_3.1.1_amd64_desktop.iso");
+                        break;
+                    case 51:
+                        webClient.DownloadFile("https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/releases/amd64/autobuilds/current-livegui-amd64/livegui-amd64-20230226T163212Z.iso", 
+                                @"c:\\ISO\\livegui-amd64-20230226T163212Z.iso");
+                        IMGs.Items.Add("c:\\ISO\\livegui-amd64-20230226T163212Z.iso");
+                        break;
+                    case 52:
+                        webClient.DownloadFile("https://downloads.puri.sm/byzantium/gnome/2022-06-02/pureos-10~devel-gnome-live-20220602_amd64.iso", 
+                                @"c:\\ISO\\pureos-10~devel-gnome-live-20220602_amd64.iso");
+                        IMGs.Items.Add("c:\\ISO\\pureos-10~devel-gnome-live-20220602_amd64.iso");
+                        break;
+                    case 53:
+                        webClient.DownloadFile("https://fbi.cdn.euro-linux.com/isos/ELD-9-x86_64-latest.iso", 
+                                @"c:\\ISO\\ELD-9-x86_64-latest.iso");
+                        IMGs.Items.Add("c:\\ISO\\ELD-9-x86_64-latest.iso");
+                        break;
+                    case 54:
+                        webClient.DownloadFile("https://sourceforge.net/projects/mx-linux/files/latest/download", 
+                                @"c:\\ISO\\MXLinux.iso");
+                        IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
+                        break;
+                    case 55:
+                        webClient.DownloadFile("https://sourceforge.net/projects/primeos/files/latest/download", 
+                                @"c:\\ISO\\primos.iso");
+                        IMGs.Items.Add("c:\\ISO\\slax-64bit-11.6.0.iso");
+                        break;
+                    case 56:
+                        webClient.DownloadFile("https://sourceforge.net/projects/blissos-dev/files/latest/download",
+                                @"c:\\ISO\\blissos.iso");
+                        IMGs.Items.Add("c:\\ISO\\blissos.iso");
+                        break;
+                    case 57:
+                        webClient.DownloadFile("https://sourceforge.net/projects/reactos/files/latest/download", 
+                                @"c:\\ISO\\reactos.iso");
+                        IMGs.Items.Add("c:\\ISO\\reactos.iso");
+                        break;
+                    case 58:
+                        webClient.DownloadFile("https://sourceforge.net/projects/peppermintos/files/latest/download", 
+                                @"c:\\ISO\\peppermintos.iso");
+                        IMGs.Items.Add("c:\\ISO\\peppermintos.iso");
+                        break;
+                    case 59:
+                        webClient.DownloadFile("https://cdn.download.clearlinux.org/releases/37980/clear/clear-37980-live-desktop.iso", 
+                                @"c:\\ISO\\clear-37980-live-desktop.iso");
+                        IMGs.Items.Add("c:\\ISO\\clear-37980-live-desktop.iso");
+                        break;
+                    case 60:
+                        webClient.DownloadFile("https://sourceforge.net/projects/loc-os/files/latest/download", 
+                                @"c:\\ISO\\Redcore.Linux.Hardened.2301.Sirius.KDE.amd64.iso");
+                        IMGs.Items.Add("c:\\ISO\\Redcore.Linux.Hardened.2301.Sirius.KDE.amd64.iso");
+                        break;
+                    case 61:
+                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download", 
+                                @"c:\\ISO\\mabox.iso");
+                        IMGs.Items.Add("c:\\ISO\\mabox.iso");
+                        break;
+                    case 62:
+                        webClient.DownloadFile("https://sourceforge.net/projects/mabox-linux/files/latest/download", 
+                                @"c:\\ISO\\mabox.iso");
+                        IMGs.Items.Add("c:\\ISO\\mabox.iso");
+                        break;
+                    case 63:
+                        webClient.DownloadFile("https://sourceforge.net/projects/reloaded-caf/files/latest/download", 
+                            @"c:\\ISO\\reloadedos.iso");
+                        IMGs.Items.Add("c:\\ISO\\reloadedos.iso");
+                        break;
+                    case 64:
+                        webClient.DownloadFile("https://sourceforge.net/projects/emmabuntus/files/latest/download", 
+                                @"c:\\ISO\\emmabuntus.iso");
+                        IMGs.Items.Add("c:\\ISO\\emmabuntus.iso");
+                        break;
+                    case 65:
+                        webClient.DownloadFile("https://sourceforge.net/projects/arcolinux-community-editions/files/xtended/arcolinuxb-xtended-v23.03.01-x86_64.iso/download", 
+                                @"c:\\ISO\\arcolinuxb-xtended-v23.03.01-x86_64.iso");
+                        IMGs.Items.Add("c:\\ISO\\arcolinuxb-xtended-v23.03.01-x86_64.iso");
+                        break;
+                    case 66:
+                        webClient.DownloadFile("https://sourceforge.net/projects/openmandriva/files/latest/download", 
+                                @"c:\\ISO\\openmandriva.iso");
+                        IMGs.Items.Add("c:\\ISO\\openmandriva.iso");
+                        break;
+                    case 67:
+                        webClient.DownloadFile("https://sourceforge.net/projects/legacyoslinux/files/latest/download", 
+                                @"c:\\ISO\\legacyoslinux.iso");
+                        IMGs.Items.Add("c:\\ISO\\legacyoslinux.iso");
+                        break;
+                    case 68:
+                        webClient.DownloadFile("https://netcologne.dl.sourceforge.net/project/xiaopanos/Xiaopan%206.4.1.zip",
+                                @"c:\\ISO\\Xiaopan%206.4.1.zip");
+                        Global.ps.StandardInput.WriteLine("PowerShell -Command \"Expand-Archive -Path Xiaopan%206.4.1.zip -DestinationPath C:\\ISO -Force\"");
+                        File.Delete(@"c:\\ISO\\Xiaopan%206.4.1.zip");
+                        IMGs.Items.Add("c:\\ISO\\Xiaopan6.4.1.iso");
+                        break;
+                    case 69:
+                        webClient.DownloadFile("https://sourceforge.net/projects/cachyos-arch/files/latest/download", 
+                                @"c:\\ISO\\cachyos.iso");
+                        IMGs.Items.Add("c:\\ISO\\cachyos.iso");
+                        break;
                     default:
                         break;
                 }

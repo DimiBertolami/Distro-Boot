@@ -80,7 +80,53 @@
             <ComboBoxItem Content="Nobara" Background="#FF23353E" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="Qubes OS" Background="#FF253E4B" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="Neptune OS" Background="Black" Foreground="#FFFCF103" FontStyle="Italic" FontFamily="Source Code Pro Light" FontWeight="Bold"/>
+            <ComboBoxItem Background="#FF7DABF6" Content="Athena OS" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="Black" Foreground="#FFFCF103" Content="Slax"/>
+            <ComboBoxItem Background="#FFFAB4C0" Content="Zorin-OS-16.2-Core-64-bit-r1.iso" Foreground="#FFF1DE07"/>
+            <ComboBoxItem Background="#FFFAA6B5" Content="Kali" Foreground="#FFFAF11F"/>
+            <ComboBoxItem Background="#FFFC93A5" Foreground="#FFFCFADB" Content="Calculate"/>
+            <ComboBoxItem Background="#FFF97289" Content="Tinycoreplus" Foreground="#FFF7F9C4"/>
+            <ComboBoxItem Content="Oracle" Background="#FFFC637D"/>
+            <ComboBoxItem Background="#FFF7526E" Content="OpenBSD" Foreground="#FFFCF4A4"/>
+            <ComboBoxItem Background="#FFF13757" Content="Ubuntu studio" Foreground="#FFFFE781"/>
+            <ComboBoxItem Background="#FFEC2748" Content="lxle" Foreground="#FFE9E88B"/>
+            <ComboBoxItem Background="#FFE42042" Content="GeckoLinux" Foreground="#FFE4D564"/>
+            <ComboBoxItem Background="#FFD8193A" Content="Peropesis" Foreground="#FFBBB838"/>
+            <ComboBoxItem Background="#FFC71231" Content="RebornOS" Foreground="#FFF1F442"/>
+            <ComboBoxItem Background="#FFBA1632" Content="MakuluLinuxShift" Foreground="#FFF3EF0C"/>
+            <ComboBoxItem Background="#FFAC142E" Content="Kodachi" Foreground="#FFF3EF0C"/>
+            <ComboBoxItem Background="#FF9D152C" Content="Bodhi Linux" Foreground="#FFCDF30C"/>
+            <ComboBoxItem Background="#FF9D152C" Content="TUXEDO OS" Foreground="#FFF3EF0C"/>
+            <ComboBoxItem Background="#FF951229" Content="Tails" Foreground="#FFF3EF0C"/>
+            <ComboBoxItem Background="#FF8F1227" Content="Slackware" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FF810F22" Content="Linuxfx Win10" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FF791022" Content="Linuxfx Win11" Foreground="#FFF3D50C"/>
+            <ComboBoxItem Background="#FF701222" Content="Puppy Linux" Foreground="#FFF3E60C"/>
+            <ComboBoxItem Background="#FF66101F" Content="ArcoLinux" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FF5B0D1B" Content="easyos" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF500E19" Content="Nitrux" Foreground="#FFDBF30C"/>
+            <ComboBoxItem Background="#FF4A0914" Content="Rocky Linux" Foreground="#FFD5F30C"/>
+            <ComboBoxItem Background="#FF410E16" Content="Salix" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF380911" Content="Devuan GNU+Linux" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF33060E" Content="Gentoo Linux" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF200409" Content="PureOS" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF1B0106" Content="EuroLinux" Foreground="#FFF3E60C"/>
+            <ComboBoxItem Background="#FFEAD1EB" Content="MX Linux" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FFFAC9FA" Content="PrimeOS" Foreground="#FFE6F30C"/>
+            <ComboBoxItem Background="#FFF8ACF9" Content="blissos-dev" Foreground="#FFE6F30C"/>
+            <ComboBoxItem Background="#FFF17BF2" Content="ReactOS" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FFEF4CF1" Content="PeppermintOS" Foreground="#FFEAE623"/>
+            <ComboBoxItem Background="#FFEA3AEC" Content="Clear Linux" Foreground="#FFEAE623"/>
+            <ComboBoxItem Background="#FFE513E7" Content="Redcore Linux" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FFD618DD" Content="Loc-OS Linux" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FFBE1DC4" Content="mabox" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FFB324B7" Content="ReloadedOS" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF9B1C9E" Content="Emmabuntüs" Foreground="#FFF3E60C"/>
+            <ComboBoxItem Background="#FF88118C" Content="Arco Linux" Foreground="#FFF3E60C"/>
+            <ComboBoxItem Background="#FF700D73" Content="OpenMandriva Lx" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF600863" Content="Legacy OS" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FF3C073E" Content="Xiaopan OS" Foreground="#FFF3DE0C"/>
+            <ComboBoxItem Background="#FF250423" Content="Cachy OS" Foreground="#FFD5F30C"/>
         </ComboBox>
         <Label x:Name="Command" Content="....lINUX ISO/IMG image boot launcher by D.Bertolami..." Margin="0,410,0,0" Width="500" Padding="5,0,1,0" Height="46" FontSize="8" FontFamily="Consolas" Foreground="#FF1847DC" BorderBrush="#FF8C1589" Cursor="IBeam" FontStretch="UltraExpanded" FontStyle="Italic" FontWeight="Medium" Opacity="0.65" VerticalAlignment="Top" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Bottom" Grid.ColumnSpan="2" ScrollViewer.CanContentScroll="True" ClipToBounds="True" MouseEnter="copy2clip" >
             <Label.Background>
