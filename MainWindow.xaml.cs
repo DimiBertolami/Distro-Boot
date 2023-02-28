@@ -45,7 +45,7 @@ namespace QemuUtil
 
         public MainWindow()
         {
-            
+
             //aTimer.Elapsed += OnTimedEvent;
             //aTimer.AutoReset = true;
             //aTimer.Enabled = true;
@@ -59,19 +59,6 @@ namespace QemuUtil
             int hWnd = ps.MainWindowHandle.ToInt32();
             Global.Handle = hWnd;
         }
-
-        private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            Process ps = Global.ps;
-            //ps.StandardInput.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
-
-
-            //string Dlsp = string.Format("{0} kb/s" + (e.BytesReceived / 1024d / Global.stopwatch.Elapsed.TotalSeconds).ToString("0.00"));
-            //MessageBox.Show(Dlsp);
-
-
-        }
-
 
         public Process CreateProcess()
         {
@@ -96,21 +83,21 @@ namespace QemuUtil
             int hWnd = ps.MainWindowHandle.ToInt32();
             Global.Handle = hWnd;
             ShowWindow(hWnd, SW_HIDE);
-            if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe")) 
+            if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe"))
             { ps.StandardInput.WriteLine("powershell -command \"winget install qemu --force\""); }
             L_Boot.WindowState = WindowState.Minimized;
             string fileName = IMGs.SelectedValue.ToString();
             if (fileName.Contains(".IMG") || fileName.Contains(".img"))
-            { 
-                ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -m 10G -drive file=" + 
+            {
+                ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -m 10G -drive file=" +
                 (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -no-reboot");
                 Command.Content = "\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -m 10G -drive file=" +
                 (char)34 + fileName + (char)34 + ",format=raw,index=0,media=disk -vga virtio -no-reboot";
             };
             if (fileName.Contains(".ISO") || fileName.Contains(".iso"))
-            { 
-              ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -cdrom " +
-                (char)34 + fileName + (char)34 + " -m 10G");
+            {
+                ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -cdrom " +
+                  (char)34 + fileName + (char)34 + " -m 10G");
                 Command.Content = "\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -cdrom " +
                 (char)34 + fileName + (char)34 + " -m 10G";
             };
@@ -133,6 +120,11 @@ namespace QemuUtil
             {
                 IMGs.Items.Add(fileName);
                 Global.ps.StandardInput.WriteLine(":: Added " + fileName);
+                using (FileStream fs = File.Create("list.txt"))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes(fileName);
+                    fs.Write(info, 0, info.Length);
+                }
             }
         }
 
@@ -148,41 +140,102 @@ namespace QemuUtil
         {
             IMGs.Items.Clear();
             int Counter = 0;
-
-            foreach (var item in Directory.EnumerateFiles("c:\\ISO", "*"))
+            if (File.Exists("list.txt"))
             {
-                if(item.ToUpper().EndsWith(".ISO") || item.ToUpper().EndsWith(".IMG"))
+                // Open the stream and read it back.
+                using (StreamReader sr = File.OpenText("list.txt"))
                 {
-                    IMGs.Items.Add(item);
-                    Process ps = Global.ps;
+                    string s = "";
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        IMGs.Items.Add(s);
+                    }
+
+                }
+                foreach (var item in Directory.EnumerateFiles("c:\\ISO", "*"))
+                {
+                    if (item.ToUpper().EndsWith(".ISO") || item.ToUpper().EndsWith(".IMG"))
+                    {
+                        IMGs.Items.Add(item);
+                        Process ps = Global.ps;
+                    }
+                }
+                //Scanner.IsEnabled = false;
+                //Scanner.Visibility = Visibility.Hidden;
+            }
+
+
+            static void DownloadFileCallback2(object sender, AsyncCompletedEventArgs e)
+            {
+                if (e.Cancelled)
+                {
+                    MessageBox.Show("File download cancelled.");
+                }
+
+                if (e.Error != null)
+                {
+                    MessageBox.Show(e.Error.ToString());
                 }
             }
-            //Scanner.IsEnabled = false;
-            //Scanner.Visibility = Visibility.Hidden;
+
+
+            // The event that will fire whenever the progress of the WebClient is changed
+            void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+            {
+                Process ps = Global.ps;
+                // Calculate download speed and output it to labelSpeed.
+                Label Speed = new();
+                // Time in hours, minutes, seconds
+                //ps.StandardInput.WriteLine("echo off");
+
+                //string x = string.Format("{0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+
+                //string x = (string.Format("echo downloadspeed: {0} kb/s..." + (e.BytesReceived / 1024d / Global.stopwatch.Elapsed.TotalSeconds).ToString("0.00")) + " downloaded: " + 
+                //    string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"))).ToString();
+                //MessageBox.Show(x, "Dimi was here");
+                for (int i = 0; i < 100; i++)
+                {
+                    ps.StandardInput.WriteLine(e.ProgressPercentage);
+                    if (i == e.ProgressPercentage)
+                    {
+                        //Global.ps.StandardInput.WriteLine("echo {0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+                    }
+                }
+            }
+            //}
+
+            // The event that will trigger when the WebClient is completed
+            void Completed(object sender, AsyncCompletedEventArgs e)
+            {
+                Process ps = Global.ps;
+                // Reset the stopwatch.
+                //sw.Reset();
+
+                if (e.Cancelled == true)
+                {
+                    ps.StandardInput.WriteLine("Download has been canceled.");
+                }
+                else
+                {
+                    ps.StandardInput.WriteLine("Download completed!");
+                }
+            }
         }
 
-
-        private static void DownloadFileCallback2(object sender, AsyncCompletedEventArgs e)
+        private void copy2clip(object sender, MouseEventArgs e)
         {
-            if (e.Cancelled)
-            {
-                MessageBox.Show("File download cancelled.");
-            }
-
-            if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.ToString());
-            }
+            Clipboard.SetText(Command.Content.ToString());
+            Process ps = Global.ps;
+            ps.StandardInput.WriteLine("cls & echo " + Clipboard.GetText());
         }
-
 
         private void DownloadImage(object sender, RoutedEventArgs e)
         {
-            if (ISOUrls.SelectedIndex.ToString()== "-1")
+            if (ISOUrls.SelectedIndex.ToString() == "-1")
             {
                 MessageBox.Show("please select an item first..");
-            } 
-            else 
+            }
+            else
             {
                 int positionCombo = ISOUrls.SelectedIndex + 1;
                 //MessageBox.Show("position in combolist: " + (positionCombo).ToString());
@@ -196,7 +249,7 @@ namespace QemuUtil
 
 
                 //webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                
+
                 //webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
 
 
@@ -395,62 +448,13 @@ namespace QemuUtil
             }
         }
 
-        // The event that will fire whenever the progress of the WebClient is changed
-        public void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            Process ps = Global.ps;
-            // Calculate download speed and output it to labelSpeed.
-            Label Speed = new();
-            // Time in hours, minutes, seconds
-            //ps.StandardInput.WriteLine("echo off");
-
-            //string x = string.Format("{0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-
-            //string x = (string.Format("echo downloadspeed: {0} kb/s..." + (e.BytesReceived / 1024d / Global.stopwatch.Elapsed.TotalSeconds).ToString("0.00")) + " downloaded: " + 
-            //    string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"))).ToString();
-            //MessageBox.Show(x, "Dimi was here");
-            for (int i = 0; i < 100; i++)
-            {
-                ps.StandardInput.WriteLine(e.ProgressPercentage);
-                if (i==e.ProgressPercentage) 
-                {
-                    //Global.ps.StandardInput.WriteLine("echo {0}    downloaded {1} of {2} bytes. {3} % complete...", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-                }
-            }
-        }
-        //}
-
-        // The event that will trigger when the WebClient is completed
-        public void Completed(object sender, AsyncCompletedEventArgs e)
-        {
-            Process ps = Global.ps;
-            // Reset the stopwatch.
-            //sw.Reset();
-
-            if (e.Cancelled == true)
-            {
-                ps.StandardInput.WriteLine("Download has been canceled.");
-            }
-            else
-            {
-                ps.StandardInput.WriteLine("Download completed!");
-            }
-        }
-
-        private void copy2clip(object sender, MouseEventArgs e)
-        {
-            Clipboard.SetText(Command.Content.ToString());
-            Process ps = Global.ps;
-            ps.StandardInput.WriteLine("cls & echo " + Clipboard.GetText());
-        }
-
-
         private void ShowTerminal(object sender, RoutedEventArgs e)
         {
             int hWnd = Global.Handle;
             ShowWindow(hWnd, SW_SHOW);
             ShowOutput.ToolTip = "Hide Terminal Output";
         }
+
         private void HideTerminal(object sender, RoutedEventArgs e)
         {
             int hWnd = Global.Handle;
