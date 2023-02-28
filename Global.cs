@@ -18,5 +18,6 @@ namespace QemuUtil
         public static WebClient webClient { get; set; }
         public static HttpClient httpClient { get; set; }
         public static string url { get; set; }
+        public static Stopwatch stopwatch { get; set; }
     }
 }
