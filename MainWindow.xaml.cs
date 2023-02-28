@@ -74,6 +74,8 @@ namespace QemuUtil
             Global.ps = ps;
             Global.id = ps.Id;
             Global.Handle = ps.MainWindowHandle.ToInt32();
+            int hWnd = ps.MainWindowHandle.ToInt32();
+            ShowWindow(hWnd, SW_HIDE);
             return ps;
         }
 
@@ -86,7 +88,7 @@ namespace QemuUtil
             if (!File.Exists("C:\\Program Files\\qemu\\qemu-system-x86_64.exe"))
             { ps.StandardInput.WriteLine("powershell -command \"winget install qemu --force\""); }
             L_Boot.WindowState = WindowState.Minimized;
-            string fileName = IMGs.SelectedValue.ToString();
+            string ?fileName = IMGs.SelectedValue.ToString();
             if (fileName.Contains(".IMG") || fileName.Contains(".img"))
             {
                 ps.StandardInput.WriteLine("\"C:\\Program Files\\qemu\\qemu-system-x86_64.exe\" -m 10G -drive file=" +
@@ -138,7 +140,9 @@ namespace QemuUtil
 
         private void ScanImages(object sender, RoutedEventArgs e)
         {
-            IMGs.Items.Clear();
+            hWnd = Global.ps.MainWindowHandle.ToInt32();
+            ShowWindow(hWnd, SW_HIDE);
+
             int Counter = 0;
             if (File.Exists("list.txt"))
             {
@@ -146,7 +150,7 @@ namespace QemuUtil
                 using (StreamReader sr = File.OpenText("list.txt"))
                 {
                     string s = "";
-                    while ((s = sr.ReadLine()) != null)
+                    while (sr.ReadLine() != null)
                     {
                         IMGs.Items.Add(s);
                     }
@@ -205,21 +209,6 @@ namespace QemuUtil
             //}
 
             // The event that will trigger when the WebClient is completed
-            void Completed(object sender, AsyncCompletedEventArgs e)
-            {
-                Process ps = Global.ps;
-                // Reset the stopwatch.
-                //sw.Reset();
-
-                if (e.Cancelled == true)
-                {
-                    ps.StandardInput.WriteLine("Download has been canceled.");
-                }
-                else
-                {
-                    ps.StandardInput.WriteLine("Download completed!");
-                }
-            }
         }
 
         private void copy2clip(object sender, MouseEventArgs e)
@@ -227,6 +216,22 @@ namespace QemuUtil
             Clipboard.SetText(Command.Content.ToString());
             Process ps = Global.ps;
             ps.StandardInput.WriteLine("cls & echo " + Clipboard.GetText());
+        }
+
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            Process ps = Global.ps;
+            // Reset the stopwatch.
+            //sw.Reset();
+
+            if (e.Cancelled == true)
+            {
+                ps.StandardInput.WriteLine("Download has been canceled.");
+            }
+            else
+            {
+                ps.StandardInput.WriteLine("Download completed!");
+            }
         }
 
         private void DownloadImage(object sender, RoutedEventArgs e)
@@ -237,18 +242,13 @@ namespace QemuUtil
             }
             else
             {
-                int positionCombo = ISOUrls.SelectedIndex + 1;
-                //MessageBox.Show("position in combolist: " + (positionCombo).ToString());
+                int positionCombo = ISOUrls.SelectedIndex;
                 Process ps = Global.ps;
-                string response = string.Empty;
+                //ps.StandardInput.WriteLine("echo position in combolist: " + (positionCombo).ToString());
                 int Counter = 0;
                 WebClient webClient = new();
 
-                aTimer = new System.Timers.Timer();
-                aTimer.Interval = 500;
-
-
-                //webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
 
                 //webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
 
