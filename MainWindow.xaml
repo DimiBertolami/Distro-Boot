@@ -10,11 +10,12 @@
         Width="500" 
         ResizeMode="NoResize"
         WindowChrome.ResizeGripDirection="Right"
-        Opacity="0.7" 
-        ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        AllowsTransparency="False"
+        WindowStyle="ThreeDBorderWindow"
         ScrollViewer.CanContentScroll="True" 
-        ScrollViewer.HorizontalScrollBarVisibility="Hidden" Background="#FF157DAF">
-    <Grid Margin="0,0,0,4" Background="#FFFCF2FF" OpacityMask="Black">
+        ScrollViewer.HorizontalScrollBarVisibility="Hidden" Background="#FFDFF2FA" Foreground="#FF973D3D">
+    <Grid Margin="0,0,0,4" Background="#FFFCF2FF" OpacityMask="Yellow" Opacity="1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -32,13 +33,13 @@
             <ListBox x:Name="IMGs" MouseDoubleClick="BootHidden" ToolTip="Doubleclick on any intem to attempt virtual boot" Background="#FFEAF2F6" Foreground="#FF224515" Margin="-8,2,9,55" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" FontFamily="Source Code Pro Black">
                 <!--<CheckBox Background="#FF8EE7A6" Foreground="#FF0B0501" Content="1. MX Linux"/>-->
             </ListBox>
-            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal output" RenderTransformOrigin="0.219,11.501" Margin="452,323,9,57" BorderThickness="5,5,5,5" Foreground="#FFF9112A" IsChecked="True" BorderBrush="#FF0B0701" Padding="3,-1,0,0" MinWidth="30" MinHeight="30" Checked="ShowTerminal" Unchecked="HideTerminal" Background="{x:Null}"/>
+            <CheckBox x:Name="ShowOutput" Content="" ToolTip="show terminal output" RenderTransformOrigin="0.219,11.501" Margin="452,320,9,57" BorderThickness="5,5,5,5" Foreground="#FFF9112A" IsChecked="True" BorderBrush="#FF0B0701" Padding="3,-1,0,0" MinWidth="30" MinHeight="30" Checked="ShowTerminal" Unchecked="HideTerminal" Background="{x:Null}"/>
             <Button x:Name="Scanner" Content="Scan" Padding="1,0,1,-1" Margin="177,345,11,22" Click="ScanImages" RenderTransformOrigin="0.498,0.956" Foreground="#FF474A14" ToolTip="scan c:\pe__data for images automatically" Background="#FFEDF1F9" FontFamily="Arial Black" FontSize="14"/>
             <Button Content="Remove image" HorizontalAlignment="Left" Margin="71,345,0,0" VerticalAlignment="Top" Click="RemoveImage" Width="103" Height="31" Background="#FFEDF1F9" Foreground="#FF494B17" FontWeight="Bold" Padding="1,0,1,1">
                 <Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Black"/>
-                        <GradientStop Color="White" Offset="1"/>
+                        <GradientStop Color="SkyBlue" Offset="1"/>
                     </LinearGradientBrush>
                 </Button.OpacityMask>
             </Button>
@@ -46,7 +47,7 @@
                 <Button.OpacityMask>
                     <LinearGradientBrush EndPoint="0.6,1" StartPoint="0.5,0.75">
                         <GradientStop Color="Black"/>
-                        <GradientStop Color="White" Offset="1"/>
+                        <GradientStop Color="SkyBlue" Offset="1"/>
                     </LinearGradientBrush>
                 </Button.OpacityMask>
             </Button>
@@ -69,7 +70,7 @@
             <ComboBoxItem Content="voyager" Background="#FFB8C9D2" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="AV Linux" Background="#FFA6B5BD" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="haiku Linux" Background="#FF919EA5" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
-            <ComboBoxItem Content="dragonflybsd" Background="#FF7D8B92" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
+            <ComboBoxItem Content="dragonfly BSD" Background="#FF7D8B92" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="Extix" Background="#FF6F7B81" Foreground="#FFF70909" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="ferenOS" Background="#FF5D6569" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
             <ComboBoxItem Content="Nobara" Background="#FF23353E" Foreground="#FFF7F513" FontFamily="Source Code Pro Light"/>
@@ -77,8 +78,8 @@
             <ComboBoxItem Content="Neptune OS" Background="Black" Foreground="#FFFCF103" FontStyle="Italic" FontFamily="Source Code Pro Light" FontWeight="Bold"/>
             <ComboBoxItem Background="#FF7DABF6" Content="Athena OS" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="Black" Foreground="#FFFCF103" Content="Slax"/>
-            <ComboBoxItem Background="#FFFAB4C0" Content="Zorin-OS-16.2-Core-64-bit-r1.iso" Foreground="#FFF1DE07"/>
-            <ComboBoxItem Background="#FFFAA6B5" Content="Kali" Foreground="#FFFAF11F"/>
+            <ComboBoxItem Background="#FFFAB4C0" Content="Zorin-OS-16.2-Core-64-bit-r1.iso" Foreground="Black"/>
+            <ComboBoxItem Background="#FFFAA6B5" Content="Kali" Foreground="Black"/>
             <ComboBoxItem Background="#FFFC93A5" Foreground="#FFFCFADB" Content="Calculate"/>
             <ComboBoxItem Background="#FFF97289" Content="Tinycoreplus" Foreground="#FFF7F9C4"/>
             <ComboBoxItem Content="Oracle" Background="#FFFC637D"/>
@@ -106,16 +107,16 @@
             <ComboBoxItem Background="#FF33060E" Content="Gentoo Linux" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FF200409" Content="PureOS" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FF1B0106" Content="EuroLinux" Foreground="#FFF3E60C"/>
-            <ComboBoxItem Background="#FFEAD1EB" Content="MX Linux" Foreground="#FFF3DE0C"/>
-            <ComboBoxItem Background="#FFFAC9FA" Content="PrimeOS" Foreground="#FFE6F30C"/>
-            <ComboBoxItem Background="#FFF8ACF9" Content="blissos-dev" Foreground="#FFE6F30C"/>
+            <ComboBoxItem Background="#FFEAD1EB" Content="MX Linux" Foreground="Black"/>
+            <ComboBoxItem Background="#FFFAC9FA" Content="PrimeOS" Foreground="Black"/>
+            <ComboBoxItem Background="#FFF8ACF9" Content="blissos-dev" Foreground="Black"/>
             <ComboBoxItem Background="#FFF17BF2" Content="ReactOS" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FFEF4CF1" Content="PeppermintOS" Foreground="#FFEAE623"/>
             <ComboBoxItem Background="#FFEA3AEC" Content="Clear Linux" Foreground="#FFEAE623"/>
             <ComboBoxItem Background="#FFE513E7" Content="Redcore Linux" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FFD618DD" Content="Loc-OS Linux" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FFBE1DC4" Content="mabox" Foreground="#FFF3DE0C"/>
-            <ComboBoxItem Background="#FFB324B7" Content="ReloadedOS" Foreground="#FFEFF30C"/>
+            <ComboBoxItem Background="#FFB324B7" Content="(NOK)ReloadedOS" Foreground="#FFEFF30C"/>
             <ComboBoxItem Background="#FF9B1C9E" Content="Emmabuntüs" Foreground="#FFF3E60C"/>
             <ComboBoxItem Background="#FF88118C" Content="Arco Linux" Foreground="#FFF3E60C"/>
             <ComboBoxItem Background="#FF700D73" Content="OpenMandriva Lx" Foreground="#FFEFF30C"/>
